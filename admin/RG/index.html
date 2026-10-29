@@ -65,6 +65,40 @@ th{color:var(--mint);font-weight:500;font-size:.85rem}
 .login{max-width:400px;margin:12vh auto 0}
 .big{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.9);display:grid;place-items:center;padding:16px}
 .big img{max-width:100%;max-height:100%}
+/* indicators and charts (same look as the design preview) */
+.two{grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));margin-top:14px}
+button.kpi{border:0;text-align:start;display:flex;flex-direction:column;gap:2px}
+button.kpi:hover{outline:1px solid var(--rim)}
+.kpi .f{font-size:.8rem;color:var(--dim)}
+.kpi.hot .v{color:var(--lime)}.kpi .v.warn{color:var(--warn)}.kpi .v.bad{color:var(--bad)}
+.kpi .v small{font-size:.9rem;color:var(--mint);font-weight:500}
+.panel header{margin-bottom:12px}.panel header p{margin:2px 0 0;color:var(--mint);font-size:.84rem}
+.att{display:flex;gap:12px;align-items:center;padding:10px 0;border-top:1px solid rgba(27,107,82,.55)}
+.att:first-child{border-top:0}.att .t{flex:1;min-width:0;font-weight:600}
+.sev{width:4px;align-self:stretch;border-radius:4px;flex:none}
+.cols{display:flex;align-items:flex-end;gap:4px;height:150px;padding-top:6px;background:repeating-linear-gradient(to top,rgba(185,205,191,.09) 0 1px,transparent 1px 50px)}
+.cols .c{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;min-width:0}
+.cols .bar{width:100%;max-width:30px;background:var(--rim);border-radius:5px 5px 2px 2px;min-height:2px}
+.cols .c:last-child .bar{background:var(--lime)}
+.cols .c .vv{font-size:.7rem;color:var(--mint);font-variant-numeric:tabular-nums}
+.cols .c:last-child .vv{color:var(--lime);font-weight:600}
+.stackcol{width:100%;max-width:44px;display:flex;flex-direction:column;justify-content:flex-end;border-radius:6px 6px 2px 2px;overflow:hidden;min-height:2px;background:var(--card2)}
+.xl{display:flex;gap:4px;margin-top:6px}.xl span{flex:1;text-align:center;font-size:.68rem;color:var(--dim);min-width:0;white-space:nowrap;overflow:hidden}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:var(--mint);margin-top:10px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:6px;vertical-align:-1px}
+.hbars{display:flex;flex-direction:column;gap:9px}
+.hb{display:grid;grid-template-columns:78px minmax(0,1fr) 44px;gap:10px;align-items:center;font-size:.86rem}
+.hb .track{height:12px;border-radius:6px;background:var(--card2);overflow:hidden}
+.hb .fill{height:100%;background:var(--rim);border-radius:6px}.hb .fill.top{background:var(--lime)}
+.hb .n{text-align:end;font-variant-numeric:tabular-nums;color:var(--mint)}
+.stack{display:flex;height:16px;border-radius:8px;overflow:hidden;gap:2px;background:var(--card2)}.stack span{display:block;height:100%}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:.88rem;margin:0}.facts dt{color:var(--mint)}.facts dd{margin:0}
+.empty{color:var(--dim);font-size:.88rem;padding:18px 0;text-align:center}
+.search{position:relative;max-width:360px;margin:10px 0 0}
+.qres{position:absolute;inset-inline:0;top:calc(100% + 4px);z-index:30;background:var(--card2);border:1px solid var(--rim);border-radius:10px;overflow:hidden}
+.qres button{display:block;width:100%;text-align:start;background:none;border:0;padding:9px 12px;border-top:1px solid var(--rim)}
+.qres button:first-child{border-top:0}.qres button:hover{background:var(--card)}
+@media (max-width:480px){.kpis{grid-template-columns:1fr 1fr}.kpi .v{font-size:1.5rem}}
 @media (max-width:860px){.shell{grid-template-columns:1fr}.side{position:static}nav.tabs{flex-direction:row;overflow-x:auto}nav.tabs button{white-space:nowrap}}
 </style>
 </head>
@@ -95,7 +129,7 @@ const DOCN = { idf: 'البطاقة (الوش)', idb: 'البطاقة (الضه�
 let ME = null, VIEW = 'home', DATA = {}, MSG = '', FILTER = 'pending';
 // who sees what: the owner sees everything and manages users; a reviewer handles coaches and reports; finance handles money
 const ROLES = { owner: 'المالك · كل حاجة', reviewer: 'مراجع المدربين والبلاغات', finance: 'الفلوس والتحويلات' };
-const CAN = { owner: ['home', 'coaches', 'pay', 'reports', 'settings', 'users', 'audit'], reviewer: ['home', 'coaches', 'reports'], finance: ['home', 'pay'] };
+const CAN = { owner: ['home', 'coaches', 'players', 'money', 'pay', 'reports', 'settings', 'users', 'audit'], reviewer: ['home', 'coaches', 'players', 'reports'], finance: ['home', 'money', 'pay'] };
 
 async function audit(what, target, extra) { try { await addDoc(collection(db, 'audit'), Object.assign({ what, target: target || '', by: ME.email, at: serverTimestamp() }, extra || {})); } catch (e) {} }
 function toast(m, bad) { MSG = (bad ? '!' : '') + m; draw(); setTimeout(() => { MSG = ''; draw(); }, 3500); }
@@ -113,30 +147,187 @@ async function load() {
   for (const c of coaches) if (c.status === 'suspended' && c.suspendUntil && c.suspendUntil.toMillis() < now) {
     await updateDoc(doc(db, 'coaches', c.id), { status: 'approved', suspendUntil: null, reason: '' }); c.status = 'approved'; await audit('انتهى الإيقاف ورجع شغال', c.id, { name: c.name });
   }
-  let players = 0, users = 0, subs = 0;
-  try { players = (await getCountFromServer(collection(db, 'players'))).data().count; } catch (e) {}
-  try { users = (await getCountFromServer(collection(db, 'users'))).data().count; } catch (e) {}
-  try { subs = (await getCountFromServer(query(collection(db, 'users'), where('sub.state', '==', 'active')))).data().count; } catch (e) {}
-  DATA = { coaches, bookings, reports, cfg, players, users, subs };
+  // players: only what the panel counts (first name, birth year, positions, last training); photos and PINs are dropped here
+  let plist = [], ulist = [];
+  try { plist = (await getDocs(query(collection(db, 'players'), limit(3000)))).docs.map(slimPlayer); } catch (e) {}
+  try { ulist = rows(await getDocs(query(collection(db, 'users'), limit(5000)))).map((u) => ({ id: u.id, sub: u.sub || null, at: ms(u.updatedAt) })); } catch (e) {}
+  const subOf = {}; ulist.forEach((u) => { subOf[u.id] = u.sub && u.sub.state; });
+  plist.forEach((p) => { p.sub = subOf[p.owner] || 'none'; });
+  const subs = ulist.filter((u) => u.sub && u.sub.state === 'active').length;
+  DATA = { coaches, bookings, reports, cfg, plist, ulist, players: plist.length, users: ulist.length, subs, at: Date.now() };
+}
+const ms = (t) => (t && t.toMillis ? t.toMillis() : typeof t === 'number' ? t : t ? Date.parse(t) || 0 : 0);
+const DAY = 864e5;
+function slimPlayer(d) {
+  const x = d.data(), s = x.summary || {};
+  let pos = [];
+  try { const st = typeof x.state === 'string' ? JSON.parse(x.state) : x.state; pos = (st && st.profile && st.profile.positions) || []; } catch (e) {}
+  const parts = String(x.name || '').trim().split(/\s+/);
+  return { id: d.id, owner: x.owner, short: parts[0] ? parts[0] + (parts[1] ? ' ' + parts[1][0] + '.' : '') : 'لاعب', year: +x.year || null, pos,
+    week: +s.week || 0, weekMin: +s.weekMin || 0, points: +s.points || 0, last: s.last ? Date.parse(s.last + 'T12:00:00') || 0 : 0, upd: ms(x.updatedAt), parent: (x.parentEmails || []).length > 0 };
 }
 async function loadAudit() { DATA.audit = rows(await getDocs(query(collection(db, 'audit'), orderBy('at', 'desc'), limit(100)))); }
 
 // ---------- views ----------
 function kpi(v, l, cls) { return `<div class="panel kpi"><div class="v num ${cls || ''}">${v}</div><div class="l">${l}</div></div>`; }
+// clickable tile: value, label, a small line under it, and the screen it opens
+function tile(v, l, foot, go, cls) { return `<button class="panel kpi ${cls === 'hot' ? 'hot' : ''}" data-v="${go}"><span class="l">${l}</span><span class="v num ${cls && cls !== 'hot' ? cls : ''}">${v}</span>${foot ? `<span class="f">${foot}</span>` : ''}</button>`; }
+const n0 = (n) => Math.round(+n || 0).toLocaleString('ar-EG');
+function columns(vals, labels, fmtv) {
+  const max = Math.max(...vals, 0) || 1, f = fmtv || n0;
+  return `<div class="cols" role="img" aria-label="${labels.map((l, i) => l + ': ' + vals[i]).join('، ')}">${vals.map((v) => `<div class="c"><span class="vv">${v ? f(v) : ''}</span><div class="bar" style="height:${(v / max) * 82}%"></div></div>`).join('')}</div>
+  <div class="xl">${labels.map((l) => `<span>${l}</span>`).join('')}</div>`;
+}
+function hbars(list, unit) {
+  const max = Math.max(...list.map((r) => r[1]), 0) || 1;
+  if (!list.some((r) => r[1])) return `<div class="empty">لسه مفيش بيانات.</div>`;
+  return `<div class="hbars">${list.map(([l, v]) => `<div class="hb"><span>${l}</span><div class="track"><div class="fill ${v === max ? 'top' : ''}" style="width:${(v / max) * 100}%"></div></div><span class="n">${n0(v)}</span></div>`).join('')}</div>${unit ? `<div class="legend"><span>${unit}</span></div>` : ''}`;
+}
+const SUBC = { active: ['مشترك', 'var(--lime)'], none: ['من غير اشتراك', 'var(--rim)'] };
+function subStack() {
+  const u = DATA.ulist, act = u.filter((x) => x.sub && x.sub.state === 'active').length, none = u.length - act;
+  if (!u.length) return `<div class="empty">لسه مفيش حسابات.</div>`;
+  return `<div class="stack" role="img" aria-label="الاشتراكات">${[[act, 'active'], [none, 'none']].filter(([v]) => v).map(([v, k]) => `<span style="width:${(v / u.length) * 100}%;background:${SUBC[k][1]}"></span>`).join('')}</div>
+  <div class="legend">${[[act, 'active'], [none, 'none']].map(([v, k]) => `<span><i style="background:${SUBC[k][1]}"></i>${SUBC[k][0]} · <b class="num">${n0(v)}</b></span>`).join('')}</div>`;
+}
+function last(nDays) { const out = []; const t = new Date(); t.setHours(12, 0, 0, 0); for (let i = nDays - 1; i >= 0; i--) out.push(t.getTime() - i * DAY); return out; }
+const sameDay = (a, b) => { const x = new Date(a), y = new Date(b); return x.getFullYear() === y.getFullYear() && x.getMonth() === y.getMonth() && x.getDate() === y.getDate(); };
+const dayLbl = (t, i, n) => (i === n - 1 ? 'النهارده' : String(new Date(t).getDate()));
+const ageOf = (p) => (p.year ? new Date().getFullYear() - p.year : null);
+const BANDROWS = [['6–9 سنين', 6, 9], ['10–12 سنة', 10, 12], ['13–15 سنة', 13, 15], ['16–18 سنة', 16, 18]];
+const POSN = { winger: 'جناح', striker: 'مهاجم', mid: 'وسط', def: 'مدافع', gk: 'حارس مرمى' };
+const actAt = (p) => Math.max(p.last || 0, p.upd || 0);
+function money() {
+  const B = DATA.bookings, paid = B.filter((b) => b.payState === 'confirmed');
+  const done = B.filter((b) => b.status === 'done' && b.payState === 'confirmed');
+  const fee = (b) => (+b.price || 0) * (+b.feePct || 0);
+  const m0 = new Date(); m0.setDate(1); m0.setHours(0, 0, 0, 0);
+  const inMonth = (b) => ms(b.confirmedAt || b.paidAt || b.createdAt) >= m0.getTime();
+  return {
+    paid, done, gross: paid.reduce((s, b) => s + (+b.price || 0), 0), cut: done.reduce((s, b) => s + fee(b), 0),
+    cutMonth: done.filter(inMonth).reduce((s, b) => s + fee(b), 0), grossMonth: paid.filter(inMonth).reduce((s, b) => s + (+b.price || 0), 0),
+    first: done.filter((b) => (+b.feePct || 0) >= 0.1).length, rest: done.filter((b) => (+b.feePct || 0) < 0.1).length,
+    owe: done.filter((b) => b.payout !== 'paid').reduce((s, b) => s + (+b.price || 0) - fee(b), 0),
+    refunded: B.filter((b) => b.payState === 'refunded').length, cancelled: B.filter((b) => b.status === 'cancelled').length,
+  };
+}
+function attention() {
+  const { coaches, bookings, reports } = DATA, a = [];
+  const open = reports.filter((r) => r.state === 'open').length, pend = coaches.filter((c) => c.status === 'pending').length;
+  const claims = bookings.filter((b) => b.payState === 'claimed').length, m = money();
+  const yr = new Date().getFullYear(), exp = coaches.filter((c) => c.status === 'approved' && c.lic && +c.lic.exp && +c.lic.exp <= yr).length;
+  if (!DATA.cfg.instapay && !DATA.cfg.vcash) a.push(['bad', 'لسه ما كتبتش رقم إنستاباي أو فودافون كاش. أولياء الأمور مش هيقدروا يدفعوا.', 'settings', 'اكتب الأرقام']);
+  if (open) a.push(['bad', `${n0(open)} بلاغ مفتوح على مدربين (المدرب مخفي لحد ما تقرر)`, 'reports', 'افتح البلاغات']);
+  if (claims) a.push(['warn', `${n0(claims)} تحويل من أولياء الأمور مستني تأكيدك`, 'pay', 'أكّد التحويلات']);
+  if (pend) a.push(['warn', `${n0(pend)} مدرب مستني مراجعة الورق`, 'coaches', 'راجع الورق']);
+  if (m.owe > 0) a.push(['warn', `${egp(m.owe)} حق مدربين لسه ما اتحوّلش`, 'pay', 'حوّل']);
+  if (exp) a.push(['warn', `${n0(exp)} رخص تدريب بتخلص السنة دي`, 'coaches', 'شوف مين']);
+  return a;
+}
+function greet() { const h = new Date().getHours(); return h < 12 ? 'صباح الخير' : 'مساء الخير'; }
 function vHome() {
-  const { coaches, bookings, reports, players, users, subs } = DATA;
-  const done = bookings.filter((b) => b.status === 'done');
-  const gross = done.reduce((s, b) => s + (+b.price || 0), 0), fee = done.reduce((s, b) => s + (+b.price || 0) * (+b.feePct || 0), 0);
-  const owe = done.filter((b) => b.payout !== 'paid').reduce((s, b) => s + (+b.price || 0) * (1 - (+b.feePct || 0)), 0);
-  const claims = bookings.filter((b) => b.payState === 'claimed').length;
-  const pend = coaches.filter((c) => c.status === 'pending').length, open = reports.filter((r) => r.state === 'open').length;
-  const exp = coaches.filter((c) => c.status === 'approved' && c.lic && +c.lic.exp && +c.lic.exp <= new Date().getFullYear());
-  return `<h1>الرئيسية</h1><p class="muted">الأرقام دي من السيرفر دلوقتي.</p>
-  <div class="grid kpis">${kpi(players, 'لاعب على السيرفر')}${kpi(users, 'حساب')}${kpi(subs, 'اشتراك شغال')}${kpi(coaches.filter((c) => c.status === 'approved').length, 'مدرب شغال')}
-  ${kpi(pend, 'مدرب مستني مراجعة', pend ? 'warn' : '')}${kpi(claims, 'تحويل مستني تأكيد', claims ? 'warn' : '')}${kpi(open, 'بلاغ مفتوح', open ? 'bad' : '')}${kpi(done.length, 'حصة اتعملت')}
-  ${kpi(egp(gross), 'إجمالي الحصص')}${kpi(egp(fee), 'عمولة حرّيف')}${kpi(egp(owe), 'لسه هيتحوّل للمدربين')}</div>
-  ${exp.length ? `<div class="note" style="margin-top:14px">رخص بتخلص السنة دي: ${exp.map((c) => esc(c.name)).join('، ')}</div>` : ''}
-  ${!DATA.cfg.instapay && !DATA.cfg.vcash ? `<div class="note bad" style="margin-top:14px">لسه ما كتبتش رقم إنستاباي أو فودافون كاش. أولياء الأمور مش هيقدروا يدفعوا. روح «إعدادات الدفع».</div>` : ''}`;
+  const { coaches, bookings, reports, plist, users, subs } = DATA, m = money(), now = Date.now();
+  const act7 = plist.filter((p) => now - actAt(p) < 7 * DAY).length, pend = coaches.filter((c) => c.status === 'pending').length;
+  const open = reports.filter((r) => r.state === 'open').length, appr = coaches.filter((c) => c.status === 'approved').length;
+  const att = attention(), d14 = last(14);
+  const actDay = d14.map((t) => plist.filter((p) => p.last && sameDay(p.last, t)).length);
+  const bookDay = d14.map((t) => bookings.filter((b) => ms(b.createdAt) && sameDay(ms(b.createdAt), t)).length);
+  const low = coaches.filter((c) => c.ratingCount >= 3 && c.ratingSum / c.ratingCount < 4.2);
+  const top = coaches.filter((c) => c.status === 'approved').map((c) => [c, bookings.filter((b) => b.coachId === c.id && b.status === 'done').length]).sort((a, b) => b[1] - a[1]).slice(0, 5).filter((x) => x[1]);
+  return `<h1>${greet()} يا ${ME.role === 'owner' ? 'رجب' : 'فريق حرّيف'}</h1><p class="muted">ده ملخص حرّيف لحد دلوقتي، ${new Date().toLocaleDateString('ar-EG', { weekday: 'long', day: 'numeric', month: 'long' })}. الأرقام كلها من السيرفر.</p>
+  ${search()}
+  <div class="grid kpis" style="margin-top:14px">
+   ${tile(n0(coaches.length), 'المدربين المسجلين', `${n0(appr)} شغالين · ${n0(pend)} مستنيين`, 'coaches')}
+   ${tile(n0(plist.length), 'اللاعبين', `${n0(act7)} اتمرنوا آخر 7 أيام`, CAN[ME.role].includes('players') ? 'players' : 'home')}
+   ${tile(n0(subs), 'اشتراكات شغالة', `من ${n0(users)} حساب`, CAN[ME.role].includes('money') ? 'money' : 'home')}
+   ${tile(`${n0(m.cutMonth)} <small>ج</small>`, 'عمولة حرّيف الشهر ده', `من حصص قيمتها ${egp(m.grossMonth)}`, CAN[ME.role].includes('money') ? 'money' : 'home', 'hot')}
+   ${tile(n0(m.done.length), 'حصص اتعملت', `${n0(bookings.length)} طلب حجز كله`, CAN[ME.role].includes('pay') ? 'pay' : 'home')}
+   ${tile(n0(open), 'بلاغات مفتوحة', open ? 'المدرب مخفي لحد ما تقرر' : 'مفيش حاجة', CAN[ME.role].includes('reports') ? 'reports' : 'home', open ? 'bad' : '')}
+  </div>
+  <div class="grid two">
+   <section class="panel"><header><h2>محتاج انتباهك</h2><p>مترتبة من الأهم</p></header>
+    ${att.length ? att.map(([s, t, v, b]) => `<div class="att"><span class="sev" style="background:var(--${s})"></span><div class="t">${t}</div>${CAN[ME.role].includes(v) ? `<button class="btn" data-v="${v}">${b}</button>` : ''}</div>`).join('') : '<div class="empty">مفيش حاجة مستنياك. كله تمام.</div>'}
+   </section>
+   <section class="panel"><header><h2>لاعبين اتمرنوا كل يوم</h2><p>آخر 14 يوم · حسب آخر تمرين اتسجل لكل لاعب</p></header>${columns(actDay, d14.map((t, i) => dayLbl(t, i, 14)))}</section>
+   <section class="panel"><header><h2>طلبات الحجز مع المدربين</h2><p>آخر 14 يوم · ${n0(bookDay.reduce((a, b) => a + b, 0))} طلب</p></header>${columns(bookDay, d14.map((t, i) => dayLbl(t, i, 14)))}</section>
+   <section class="panel"><header><h2>الاشتراكات</h2><p>من ${n0(users)} حساب على السيرفر</p></header>${subStack()}<p class="dim" style="font-size:.8rem;margin:10px 0 0">فلوس الاشتراكات نفسها بتتحسب في جوجل بلاي.</p></section>
+   <section class="panel"><header><h2>اللاعبين حسب السن</h2><p>من سنة الميلاد</p></header>${hbars(BANDROWS.map(([l, a, b]) => [l, plist.filter((p) => ageOf(p) >= a && ageOf(p) <= b).length]))}</section>
+   <section class="panel"><header><h2>المدربين</h2><p>الأكتر حصص · وأقل تقييمات</p></header>
+    ${top.length ? top.map(([c, n]) => `<div class="att"><div class="t">${esc(c.name)}</div><span class="muted num">${n0(n)} حصة${c.ratingCount ? ' · ★ ' + (c.ratingSum / c.ratingCount).toFixed(1) : ''}</span><button class="btn" data-open="${c.id}">افتح</button></div>`).join('') : '<div class="empty">لسه مفيش حصص اتعملت.</div>'}
+    ${low.length ? `<h3 style="margin-top:12px;color:var(--warn)">تقييم أقل من 4.2</h3>${low.map((c) => `<div class="att"><div class="t">${esc(c.name)}</div><b class="num">★ ${(c.ratingSum / c.ratingCount).toFixed(1)}</b><button class="btn" data-open="${c.id}">افتح</button></div>`).join('')}` : ''}
+   </section>
+   <section class="panel"><header><h2>التطبيق نفسه</h2><p>من جوجل بلاي</p></header>
+    <dl class="facts"><dt>آخر نسخة</dt><dd class="num">0.12.0 (19) · في الاختبار المغلق</dd><dt>الأعطال والتقييمات</dt><dd>بتظهر في Play Console</dd></dl>
+    <a class="btn" style="display:inline-block;margin-top:12px;text-decoration:none" href="https://play.google.com/console/u/0/developers/5699593669361738595/app/4974482083285867715/app-dashboard" target="_blank" rel="noopener">افتح Play Console</a>
+   </section>
+  </div>
+  <p class="dim" style="font-size:.8rem;margin-top:14px">آخر تحديث: ${dt(DATA.at)}</p>`;
+}
+function vPlayers() {
+  const P = DATA.plist, now = Date.now(), act7 = P.filter((p) => now - actAt(p) < 7 * DAY).length;
+  const posCount = Object.keys(POSN).map((k) => [POSN[k], P.filter((p) => p.pos.includes(k)).length]);
+  const recent = P.slice().sort((a, b) => actAt(b) - actAt(a)).slice(0, 60);
+  const ago = (t) => { if (!t) return '–'; const d = Math.floor((now - t) / DAY); return d <= 0 ? 'النهارده' : d === 1 ? 'امبارح' : 'من ' + n0(d) + ' أيام'; };
+  const wk = P.reduce((s, p) => s + p.week, 0);
+  return `<h1>اللاعبين</h1><p class="muted">أرقام وأعداد بس.</p>
+  <div class="note ok" style="margin:12px 0 14px"><b>خصوصية الأطفال:</b> اللوحة بتعرض الاسم الأول وأول حرف من اسم العيلة بس. مفيش صور ولا أرقام تليفونات ولا عناوين، ومفيش أي طريقة للتواصل مع طفل.</div>
+  <div class="grid kpis">${kpi(n0(P.length), 'كل اللاعبين')}${kpi(n0(act7), `نشطين آخر 7 أيام${P.length ? ' · ' + Math.round((act7 / P.length) * 100) + '%' : ''}`)}${kpi(n0(P.filter((p) => p.parent).length), 'ولي الأمر مربوط بالحساب')}${kpi(n0(wk), 'تمارين اتعملت الأسبوع ده')}${kpi(n0(P.filter((p) => p.sub === 'active').length), 'لاعب حسابه مشترك')}</div>
+  <div class="grid two">
+   <section class="panel"><header><h2>حسب السن</h2></header>${hbars(BANDROWS.map(([l, a, b]) => [l, P.filter((p) => ageOf(p) >= a && ageOf(p) <= b).length]), `الإجمالي ${n0(P.length)} لاعب`)}</section>
+   <section class="panel"><header><h2>حسب المركز</h2><p>اللاعب ممكن يختار أكتر من مركز</p></header>${hbars(posCount)}</section>
+  </div>
+  <section class="panel" style="margin-top:14px"><header><h2>آخر اللاعبين نشاطًا</h2><p>${n0(recent.length)} من ${n0(P.length)}</p></header>
+   ${recent.length ? `<div class="tw"><table><thead><tr><th>اللاعب</th><th>السن</th><th>المركز</th><th>تمارين الأسبوع</th><th>دقايق الأسبوع</th><th>آخر تمرين</th><th>الاشتراك</th><th>ولي الأمر</th></tr></thead><tbody>
+   ${recent.map((p) => `<tr><td><b>${esc(p.short)}</b></td><td>${ageOf(p) || '–'}</td><td>${p.pos.map((k) => POSN[k] || k).join('، ') || '–'}</td><td>${n0(p.week)}</td><td>${n0(p.weekMin)}</td><td>${ago(p.last)}</td><td>${p.sub === 'active' ? '<span class="pill ok">مشترك</span>' : '<span class="pill">لأ</span>'}</td><td>${p.parent ? '<span class="pill ok">مربوط</span>' : '–'}</td></tr>`).join('')}</tbody></table></div>` : '<div class="empty">لسه مفيش لاعبين على السيرفر. اللاعب بيظهر هنا لما يعمل حساب في التطبيق.</div>'}
+  </section>`;
+}
+function vMoney() {
+  const m = money(), B = DATA.bookings;
+  const months = []; const d = new Date(); d.setDate(1); d.setHours(0, 0, 0, 0);
+  for (let i = 5; i >= 0; i--) { const s = new Date(d.getFullYear(), d.getMonth() - i, 1).getTime(), e = new Date(d.getFullYear(), d.getMonth() - i + 1, 1).getTime(); months.push([s, e]); }
+  const inR = (b, [s, e]) => { const t = ms(b.confirmedAt || b.paidAt || b.createdAt); return t >= s && t < e; };
+  const gross = months.map((r) => m.paid.filter((b) => inR(b, r)).reduce((s, b) => s + (+b.price || 0), 0));
+  const cut = months.map((r) => m.done.filter((b) => inR(b, r)).reduce((s, b) => s + (+b.price || 0) * (+b.feePct || 0), 0));
+  const max = Math.max(...gross, 1), ex = 300;
+  const wk0 = Date.now() - 7 * DAY, name = (id) => (DATA.coaches.find((c) => c.id === id) || {}).name || id;
+  const byC = {}; m.done.filter((b) => ms(b.updatedAt || b.createdAt) >= wk0 || b.payout !== 'paid').forEach((b) => { (byC[b.coachId] = byC[b.coachId] || []).push(b); });
+  return `<h1>الفلوس</h1><p class="muted">حصص المدربين وعمولة حرّيف وتحويلات المدربين. فلوس الاشتراكات بتتحسب في جوجل بلاي.</p>
+  <div class="grid kpis" style="margin-top:14px">
+   <div class="panel kpi hot"><span class="l">عمولة حرّيف الشهر ده</span><span class="v num">${n0(m.cutMonth)} <small>ج</small></span><span class="f">من الحصص اللي اتعملت</span></div>
+   <div class="panel kpi"><span class="l">حصص اتدفعت</span><span class="v num">${n0(m.paid.length)}</span><span class="f">قيمتها ${egp(m.gross)}</span></div>
+   <div class="panel kpi"><span class="l">عمولة حرّيف كلها</span><span class="v num">${n0(m.cut)} <small>ج</small></span><span class="f">${n0(m.first)} حصة بـ12% · ${n0(m.rest)} حصة بـ7%</span></div>
+   <div class="panel kpi"><span class="l">لسه هيتحوّل للمدربين</span><span class="v num ${m.owe ? 'warn' : ''}">${n0(m.owe)} <small>ج</small></span><span class="f">بعد خصم العمولة</span></div>
+   <div class="panel kpi"><span class="l">اشتراكات شغالة</span><span class="v num">${n0(DATA.subs)}</span><span class="f">المبلغ في جوجل بلاي</span></div>
+   <div class="panel kpi"><span class="l">إلغاء</span><span class="v num">${n0(m.cancelled)}</span><span class="f">${n0(m.refunded)} منهم رجعت فلوسهم</span></div>
+  </div>
+  <div class="grid two">
+   <section class="panel"><header><h2>الحصص كل شهر</h2><p>بالجنيه · آخر 6 شهور</p></header>
+    <div class="cols" role="img" aria-label="الحصص كل شهر">${gross.map((v, i) => `<div class="c"><span class="vv">${v ? n0(v) : ''}</span><div class="stackcol" style="height:${(v / max) * 82}%"><span style="flex:${cut[i]};background:var(--ok)"></span><span style="flex:${Math.max(v - cut[i], 0)};background:${i === 5 ? 'var(--lime)' : 'var(--rim)'}"></span></div></div>`).join('')}</div>
+    <div class="xl">${months.map(([s]) => `<span>${new Date(s).toLocaleDateString('ar-EG', { month: 'short' })}</span>`).join('')}</div>
+    <div class="legend"><span><i style="background:var(--rim)"></i>حق المدربين</span><span><i style="background:var(--ok)"></i>عمولة حرّيف</span></div>
+   </section>
+   <section class="panel"><header><h2>الاشتراكات</h2><p>تجربة شهر ببلاش · شهري 79 ج · سنوي 599 ج</p></header>${subStack()}
+    <a class="btn" style="display:inline-block;margin-top:14px;text-decoration:none" href="https://play.google.com/console/u/0/developers/5699593669361738595/app/4974482083285867715/financial-reports" target="_blank" rel="noopener">شوف فلوس الاشتراكات في جوجل بلاي</a>
+   </section>
+  </div>
+  <section class="panel" style="margin-top:14px"><header><h2>العمولة بتتحسب إزاي</h2><p>المدرب مابيدفعش اشتراك</p></header>
+   <div class="grid two" style="margin-top:0"><div class="note">أول <b>5 حصص</b> مع كل لاعب: حرّيف بتاخد <b>12%</b>.<br>من الحصة السادسة مع نفس اللاعب: <b>7%</b> بس.</div>
+   <div class="note">مثال: حصة بـ${ex} ج<br>أول 5 حصص: حرّيف ${n0(ex * 0.12)} ج والمدرب ${n0(ex * 0.88)} ج<br>بعد كده: حرّيف ${n0(ex * 0.07)} ج والمدرب ${n0(ex * 0.93)} ج</div></div>
+  </section>
+  <section class="panel" style="margin-top:14px"><header><h2>حساب المدربين</h2><p>الحصص اللي اتعملت آخر أسبوع واللي لسه ما اتحوّلتش</p></header>
+   ${Object.keys(byC).length ? `<div class="tw"><table><thead><tr><th>المدرب</th><th>حصص</th><th>القيمة</th><th>عمولة حرّيف</th><th>صافي للمدرب</th><th>الحالة</th></tr></thead><tbody>
+   ${Object.entries(byC).map(([id, bs]) => { const g = bs.reduce((s, b) => s + (+b.price || 0), 0), c = bs.reduce((s, b) => s + (+b.price || 0) * (+b.feePct || 0), 0), wait = bs.filter((b) => b.payout !== 'paid').length; return `<tr><td><button class="btn" style="padding:3px 10px" data-open="${id}">${esc(name(id))}</button></td><td>${n0(bs.length)}</td><td>${n0(g)}</td><td>${n0(c)}</td><td><b>${n0(g - c)}</b></td><td>${wait ? `<span class="pill warn">${n0(wait)} لسه</span>` : '<span class="pill ok">اتحوّل</span>'}</td></tr>`; }).join('')}</tbody></table></div>
+   ${CAN[ME.role].includes('pay') ? '<button class="btn p" data-v="pay" style="margin-top:12px">روح للتحويلات</button>' : ''}` : '<div class="empty">لسه مفيش حصص اتعملت.</div>'}
+  </section>`;
+}
+// search across coaches and players (first name only for players)
+function search() { return `<div class="search"><input class="in" id="q" type="search" placeholder="دوّر على مدرب أو لاعب" aria-label="بحث" autocomplete="off"><div class="qres" id="qres" hidden></div></div>`; }
+function runSearch(q) {
+  const box = $('#qres'); if (!box) return; q = q.trim();
+  if (q.length < 2) { box.hidden = true; return; }
+  const cs = DATA.coaches.filter((c) => String(c.name || '').includes(q)).slice(0, 6).map((c) => `<button data-open="${c.id}">مدرب · ${esc(c.name)} · ${(CST[c.status] || [c.status])[0]}</button>`);
+  const ps = CAN[ME.role].includes('players') ? DATA.plist.filter((p) => p.short.includes(q)).slice(0, 6).map((p) => `<button data-v="players">لاعب · ${esc(p.short)}${ageOf(p) ? ' · ' + ageOf(p) + ' سنة' : ''}</button>`) : [];
+  box.innerHTML = cs.concat(ps).join('') || '<div class="empty" style="padding:10px">مفيش نتايج.</div>'; box.hidden = false;
 }
 function vCoaches() {
   const list = DATA.coaches.filter((c) => FILTER === 'all' || (FILTER === 'flagged' ? c.flagged : c.status === FILTER));
@@ -194,7 +385,7 @@ function vPay() {
   const owe = DATA.bookings.filter((b) => b.status === 'done' && b.payState === 'confirmed' && b.payout !== 'paid');
   const byCoach = {}; owe.forEach((b) => { (byCoach[b.coachId] = byCoach[b.coachId] || []).push(b); });
   const name = (id) => (DATA.coaches.find((c) => c.id === id) || {}).name || id;
-  return `<h1>الحجوزات والفلوس</h1>
+  return `<h1>الحجوزات والتحويلات</h1>
   <h2 style="margin-top:14px">تحويلات مستنية تأكيدك (${claims.length})</h2><p class="muted" style="font-size:.9rem">اتأكد إن الفلوس وصلت على إنستاباي أو فودافون كاش برقم العملية، وبعدين أكّد.</p>
   <div class="list">${claims.length ? claims.map((b) => `<div class="item"><div class="g"><h3>${egp(b.price)} · ${b.payMethod === 'vcash' ? 'فودافون كاش' : 'إنستاباي'}</h3><div class="muted" style="font-size:.86rem">رقم العملية: <b dir="ltr">${esc(b.payRef)}</b> · ${dt(b.paidAt)}</div><div class="dim" style="font-size:.82rem">${esc(b.coachName)} · ${esc(b.playerFirst)} · ${esc(b.date)} ${esc(b.time)}</div></div><button class="btn p" data-pay="${b.id}:ok">الفلوس وصلت · أكّد</button><button class="btn bad" data-pay="${b.id}:no">ما وصلتش</button></div>`).join('') : '<p class="muted">مفيش.</p>'}</div>
   ${(() => { const paid = DATA.bookings.filter((b) => b.payState === 'confirmed' && b.status === 'accepted'); return `<h2 style="margin-top:22px">حصص مدفوعة لسه ما اتعملتش (${paid.length})</h2><p class="muted" style="font-size:.9rem">لو ولي الأمر أو المدرب طلب الإلغاء، رجّع الفلوس على نفس المحفظة الأول، وبعدين دوس «اتلغت ورجعت الفلوس».</p>
@@ -215,7 +406,11 @@ function vSettings() {
    <div class="field"><label for="ip">رقم أو عنوان إنستاباي</label><input class="in" id="ip" dir="ltr" value="${esc(c.instapay || '')}" autocomplete="off"></div>
    <div class="field"><label for="vc">رقم فودافون كاش</label><input class="in" id="vc" dir="ltr" inputmode="tel" value="${esc(c.vcash || '')}" autocomplete="off"></div>
    <div class="field"><label for="pn">الاسم اللي هيظهر لولي الأمر وهو بيحوّل</label><input class="in" id="pn" value="${esc(c.payName || '')}"></div>
-   <button class="btn p" data-save-cfg>احفظ</button></div>`;
+   <button class="btn p" data-save-cfg>احفظ</button></div>
+  <div class="grid two">
+   <section class="panel"><header><h2>قواعد الفلوس</h2><p>ثابتة في التطبيق</p></header><dl class="facts"><dt>عمولة أول 5 حصص</dt><dd>12% من كل حصة مع نفس اللاعب</dd><dt>من الحصة السادسة</dt><dd>7%</dd><dt>اشتراك المدرب</dt><dd>ببلاش</dd><dt>الدفع</dt><dd>إنستاباي أو فودافون كاش، وانت بتأكّد التحويل</dd><dt>الإلغاء قبل الحصة</dt><dd>الفلوس بترجع لولي الأمر</dd><dt>تحويل حق المدرب</dt><dd>كل أسبوع بعد ما الحصة تتعمل</dd></dl></section>
+   <section class="panel"><header><h2>قواعد حماية الأطفال</h2><p>ثابتة ومينفعش تتقفل من اللوحة</p></header><dl class="facts"><dt>الحجز</dt><dd>من حساب ولي الأمر بس</dd><dt>المدرب</dt><dd>مايظهرش غير بعد مراجعة البطاقة والرخصة والفيش</dd><dt>أي بلاغ</dt><dd>بيخفي المدرب على طول لحد ما تقرر</dd><dt>بيانات الطفل</dt><dd>الاسم الأول وحرف، من غير صورة ولا تليفون</dd><dt>الشات</dt><dd>مفيش رسايل مباشرة بين مدرب وطفل</dd></dl></section>
+  </div>`;
 }
 function vAudit() {
   const a = DATA.audit;
@@ -233,7 +428,7 @@ function vUsers() {
    ${u.id === ME.uid ? '<span class="pill ok">انت</span>' : `<select class="in" data-role="${u.id}" style="width:auto">${Object.entries(ROLES).map(([k, n]) => `<option value="${k}"${u.role === k ? ' selected' : ''}>${n}</option>`).join('')}</select><button class="btn bad" data-rm="${u.id}">شيل الصلاحية</button>`}</div>`).join('')}</div>
   ${inv.length ? `<h2>مستنيين يدخلوا أول مرة</h2><div class="list" style="margin-top:8px">${inv.map((i) => `<div class="item"><div class="g"><h3 dir="ltr" style="text-align:start">${esc(i.id)}</h3><div class="muted" style="font-size:.86rem">${ROLES[i.role] || i.role}</div></div><button class="btn bad" data-uninv="${esc(i.id)}">إلغاء</button></div>`).join('')}</div>` : ''}`;
 }
-const VIEWS = { home: ['الرئيسية', vHome], coaches: ['المدربين', vCoaches], pay: ['الحجوزات والفلوس', vPay], reports: ['البلاغات', vReports], settings: ['إعدادات الدفع', vSettings], users: ['المستخدمين', vUsers], audit: ['السجل', vAudit] };
+const VIEWS = { home: ['الرئيسية', vHome], coaches: ['المدربين', vCoaches], players: ['اللاعبين', vPlayers], money: ['الفلوس', vMoney], pay: ['الحجوزات والتحويلات', vPay], reports: ['البلاغات', vReports], settings: ['إعدادات الدفع', vSettings], users: ['المستخدمين', vUsers], audit: ['السجل', vAudit] };
 function badge(k) { if (!DATA.coaches) return 0; if (k === 'coaches') return DATA.coaches.filter((c) => c.status === 'pending').length; if (k === 'pay') return DATA.bookings.filter((b) => b.payState === 'claimed').length; if (k === 'reports') return DATA.reports.filter((r) => r.state === 'open').length; return 0; }
 function draw() {
   const root = $('#root');
@@ -254,6 +449,7 @@ function loginView(err) {
   $('#lf').addEventListener('submit', async (e) => { e.preventDefault(); try { await signInWithEmailAndPassword(auth, $('#em').value.trim(), $('#pw').value); } catch (x) { loginView('الإيميل أو كلمة السر غلط.'); } });
   $('#fp').addEventListener('click', async () => { const m = $('#em').value.trim(); if (!m) return loginView('اكتب إيميلك فوق الأول.'); try { await sendPasswordResetEmail(auth, m); loginView('بعتنالك لينك تغيّر بيه كلمة السر.'); } catch (x) { loginView('ما قدرتش أبعت. اتأكد من الإيميل.'); } });
 }
+document.addEventListener('input', (e) => { if (e.target && e.target.id === 'q') runSearch(e.target.value); });
 document.addEventListener('change', async (e) => {
   const t = e.target; if (!t.dataset || !t.dataset.role || !ME) return;
   try { await updateDoc(doc(db, 'admins', t.dataset.role), { role: t.value }); await audit('غيّر صلاحية إلى ' + (ROLES[t.value] || t.value), t.dataset.role); await loadUsers(); toast('اتحفظ.'); } catch (x) { toast('ما اتحفظش: ' + x.message, 1); }
