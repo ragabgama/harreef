@@ -2,125 +2,515 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>سياسة الخصوصية — حرّيف</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta property="og:image" content="img/hero-boy.jpg">
+<title>حرّيف · عيش حياة اللعّيب</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="حرّيف: الأكاديمية لوحدها مش كفاية. برنامج يومي يدّي اللاعب من 6 لـ 18 سنة حياة لاعب النادي.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Changa:wght@500;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap">
 <style>
-:root{--bg:#05201A;--card:#0C3D2D;--lime:#C6F432;--chalk:#F4F7F2;--mint:#B9CDBF;--line:#1B6B52}
+/* Layout: a night stadium. Centered promise in a viewfinder over a lime glow, then one big framed photo with glass cards floating on it; every section sits on glass over faint pitch lines */
+:root{
+ --bg:#04170F; --bg2:#06231A; --glass:rgba(12,61,45,.42); --glass2:rgba(12,61,45,.7); --rim:rgba(198,244,50,.16); --rim2:#1B6B52;
+ --lime:#C6F432; --lime2:#9BD11E; --chalk:#F4F7F2; --mint:#B9CDBF; --amber:#FFC24B;
+ --glow:0 0 0 1px rgba(198,244,50,.35),0 0 32px rgba(198,244,50,.18);
+ --display:"Changa","Segoe UI",Tahoma,sans-serif;
+ --text:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;
+ color-scheme:dark;
+}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--chalk);font:16px/1.75 "IBM Plex Sans Arabic",Tahoma,sans-serif}
-main{max-width:760px;margin:0 auto;padding:28px 16px 60px}
-h1{font-size:26px;line-height:1.3;margin:0 0 4px;color:var(--lime)}
-h2{font-size:19px;margin:28px 0 6px}
-p,li{color:var(--mint)}
-ul{padding-inline-start:22px}
-.date{font-size:14px;color:var(--mint)}
-.en{direction:ltr;text-align:left;border-top:1px solid var(--line);margin-top:48px;padding-top:12px}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--chalk);font:17px/1.75 var(--text);overflow-x:hidden}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+ background:radial-gradient(60% 40% at 50% 0%,rgba(198,244,50,.10),transparent 70%),radial-gradient(40% 30% at 85% 60%,rgba(27,107,82,.25),transparent 70%)}
 a{color:var(--lime)}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--lime);outline-offset:3px;border-radius:12px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);line-height:1.2;text-wrap:balance;margin:0}
+h2{font-size:clamp(30px,4.4vw,46px);font-weight:800}
+h3{font-size:21px;font-weight:700}
+p{margin:0}
+.muted{color:var(--mint)}
+.en{display:none}
+html[lang="en"] .ar{display:none}
+html[lang="en"] .en{display:revert}
+
+/* tag pill, like a broadcast caption */
+.tag{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--rim);background:rgba(198,244,50,.06);color:var(--lime);border-radius:999px;padding:6px 16px;font:700 14px var(--display)}
+.tag::before{content:"✦";font-size:12px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--lime);font:700 14px var(--display)}
+.eyebrow::before{content:"";width:22px;height:2px;background:var(--lime);border-radius:2px}
+[lang="en"] .eyebrow{letter-spacing:.1em;text-transform:uppercase}
+
+/* floating pill nav */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;padding-block:14px}
+.navpill{display:flex;align-items:center;gap:22px;min-height:62px;padding-inline:22px 10px;border-radius:999px;border:1px solid var(--rim);background:rgba(4,23,15,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--chalk);font:800 24px var(--display)}
+.logo{width:34px;height:34px;flex:none;filter:drop-shadow(0 0 10px rgba(198,244,50,.35))}
+nav.links{display:flex;gap:24px;margin-inline-start:auto}
+nav.links a{color:var(--mint);text-decoration:none;font-weight:500;font-size:15px;position:relative;padding-block:6px}
+nav.links a:hover{color:var(--lime)}
+nav.links a:hover::after{content:"";position:absolute;inset:auto 20% -2px;height:2px;border-radius:2px;background:var(--lime)}
+.lang{background:none;border:0;color:var(--mint);font:600 14px var(--text);padding:6px 10px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.lang:hover{color:var(--chalk)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font:700 17px var(--display);text-decoration:none;border-radius:999px;padding:13px 26px;border:0;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease}
+.btn.primary{background:linear-gradient(180deg,var(--lime),var(--lime2));color:#04170F;box-shadow:0 8px 30px rgba(198,244,50,.25)}
+.btn.primary:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(198,244,50,.35)}
+.btn.line{border:1px solid var(--rim2);color:var(--lime);background:rgba(4,23,15,.4)}
+.btn.line:hover{border-color:var(--lime)}
+.btn.sm{padding:10px 20px;font-size:15px}
+@media (max-width:900px){nav.links{display:none}.navpill .lang{margin-inline-start:auto}.navpill .btn.sm{display:none}}
+
+/* hero: centered promise inside viewfinder corners */
+.hero{position:relative;text-align:center;padding-block:72px 40px;display:flex;flex-direction:column;align-items:center;gap:20px}
+.hero::before{content:"";position:absolute;inset:-10% 10% 10%;z-index:-1;background:radial-gradient(closest-side,rgba(198,244,50,.16),rgba(27,107,82,.12) 50%,transparent)}
+.vf{position:absolute;width:44px;height:44px;border:2px solid var(--lime);opacity:.7}
+.vf.a{top:24px;inset-inline-start:0;border-inline-end:0;border-bottom:0}
+.vf.b{top:24px;inset-inline-end:0;border-inline-start:0;border-bottom:0}
+.vf.c{bottom:0;inset-inline-start:0;border-inline-end:0;border-top:0}
+.vf.d{bottom:0;inset-inline-end:0;border-inline-start:0;border-top:0}
+.hero h1{font-size:clamp(42px,7.4vw,92px);font-weight:800;letter-spacing:-.01em;line-height:1.08}
+.hero h1 .hl{color:var(--lime);text-shadow:0 0 40px rgba(198,244,50,.35)}
+.hero .lead{font-size:19px;color:var(--mint);max-width:40em}
+.cta{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.note{font-size:14px;color:var(--mint)}
+.bands{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.band{border:1px solid var(--rim);border-radius:999px;padding:4px 14px;font-size:14px;color:var(--mint);font-variant-numeric:tabular-nums;background:rgba(4,23,15,.5)}
+.band b{color:var(--chalk);font-weight:600}
+
+/* stage: the big photo in a glowing frame, glass cards floating on it */
+.stage{position:relative;margin-top:28px;border-radius:32px;overflow:hidden;aspect-ratio:16/8;max-width:100%;box-shadow:var(--glow)}
+.stage img{width:100%;height:100%;object-fit:cover;display:block;object-position:58% 40%}
+/* the players behind are kept soft: only the boy in front is in focus */
+.stage .veil{position:absolute;inset:0;z-index:0;pointer-events:none;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);-webkit-mask-image:linear-gradient(90deg,#000 0%,#000 36%,transparent 47%,transparent 66%,#000 76%);mask-image:linear-gradient(90deg,#000 0%,#000 36%,transparent 47%,transparent 66%,#000 76%)}
+@media (max-width:900px){.stage .veil{-webkit-mask-image:linear-gradient(90deg,#000 0%,#000 22%,transparent 36%,transparent 70%,#000 82%);mask-image:linear-gradient(90deg,#000 0%,#000 22%,transparent 36%,transparent 70%,#000 82%)}}
+.stage::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(4,23,15,.92) 0%,rgba(4,23,15,.15) 55%,rgba(4,23,15,.35) 100%)}
+.stage .lines{position:absolute;inset:14px;border:1px solid rgba(198,244,50,.28);border-radius:22px;z-index:1;pointer-events:none}
+.stage .lines::before{content:"";position:absolute;inset:auto 0 0;height:46%;border-top:1px solid rgba(198,244,50,.22);border-radius:50% 50% 0 0/40% 40% 0 0}
+.floatcards{position:absolute;inset:auto 0 0;z-index:2;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:22px}
+.glass{background:var(--glass);border:1px solid var(--rim);border-radius:22px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.fc{padding:18px;display:flex;gap:14px;align-items:flex-start;text-align:start;min-width:0}
+.fc p{color:var(--mint);font-size:14px;line-height:1.6}
+.fc b{display:block;font:800 26px/1.1 var(--display);color:var(--chalk)}
+.ico{flex:none;width:52px;height:52px;border-radius:16px;display:grid;place-items:center;border:1px solid var(--rim);background:rgba(198,244,50,.07);color:var(--lime)}
+.ico svg{width:24px;height:24px}
+@media (max-width:900px){.stage{aspect-ratio:4/5;border-radius:24px}.floatcards{grid-template-columns:1fr;gap:10px;padding:14px}.fc{padding:14px}.fc b{font-size:22px}}
+
+/* sections on glass over faint pitch lines */
+section.s{position:relative;padding-block:84px}
+section.s.lines{background:repeating-linear-gradient(90deg,transparent 0 calc(25% - 1px),rgba(198,244,50,.04) calc(25% - 1px) 25%)}
+.head{display:flex;flex-direction:column;gap:12px;max-width:48em;margin-bottom:36px}
+.head.center{margin-inline:auto;text-align:center;align-items:center}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media (max-width:900px){.grid3{grid-template-columns:1fr}}
+.feat{display:flex;flex-direction:column;gap:10px;min-width:0;padding:26px;background:var(--glass);border:1px solid var(--rim);border-radius:24px;transition:border-color .25s,transform .25s}
+.feat:hover{border-color:rgba(198,244,50,.45);transform:translateY(-3px)}
+.feat .num{font:800 40px/1 var(--display);color:var(--lime);font-variant-numeric:tabular-nums;text-shadow:0 0 24px rgba(198,244,50,.3)}
+.feat p{color:var(--mint)}
+
+/* the gap */
+.gap{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.gcol{border:1px solid var(--rim);border-radius:24px;padding:26px;display:flex;flex-direction:column;gap:8px;min-width:0;background:var(--glass)}
+.gcol.hl2{border-color:rgba(198,244,50,.6);box-shadow:var(--glow);background:linear-gradient(160deg,rgba(198,244,50,.10),rgba(12,61,45,.5))}
+.gk{font:700 15px var(--display);color:var(--mint)}
+.gcol.hl2 .gk{color:var(--lime)}
+.gv{font:800 38px/1.15 var(--display)}
+.gs{color:var(--mint);font-size:15px}
+.gbar{height:8px;border-radius:99px;background:rgba(185,205,191,.12);margin-top:12px;overflow:hidden}
+.gbar i{display:block;height:100%;border-radius:99px;background:var(--mint)}
+.gcol.hl2 .gbar i{background:var(--lime);box-shadow:0 0 14px var(--lime)}
+@media (max-width:900px){.gap{grid-template-columns:1fr}}
+
+/* pillars with photos */
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.pillar{position:relative;border-radius:26px;overflow:hidden;min-height:440px;display:flex;align-items:flex-end;border:1px solid var(--rim);transition:box-shadow .3s}
+.pillar:hover{box-shadow:var(--glow)}
+.pillar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .8s ease}
+.pillar:hover img{transform:scale(1.05)}
+.pillar .cap{position:relative;margin:12px;padding:18px;display:flex;flex-direction:column;gap:6px;width:100%;background:rgba(4,23,15,.62);border:1px solid var(--rim);border-radius:18px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.pillar .cap p{color:var(--mint);font-size:15px}
+@media (max-width:900px){.pillars{grid-template-columns:1fr}.pillar{min-height:340px}}
+
+/* the day */
+.day{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.day > div{padding:26px;display:flex;flex-direction:column;gap:8px;min-width:0;background:var(--glass);border:1px solid var(--rim);border-radius:24px}
+.day .when{font:700 14px var(--display);color:var(--lime)}
+.day p{color:var(--mint)}
+@media (max-width:900px){.day{grid-template-columns:1fr}}
+
+/* age table */
+.tbl{overflow-x:auto;border:1px solid var(--rim);border-radius:22px;background:var(--glass)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-variant-numeric:tabular-nums}
+th,td{padding:15px 18px;text-align:start;border-bottom:1px solid rgba(198,244,50,.08)}
+th{font:700 14px var(--display);color:var(--lime)}
+tr:last-child td{border-bottom:0}
+
+/* phone mockups */
+.phone{width:min(300px,100%);margin-inline:auto;background:#03120c;border:9px solid #0a0f0d;border-radius:42px;padding:18px 14px 22px;box-shadow:0 30px 80px rgba(0,0,0,.5),var(--glow);aspect-ratio:9/18.5;max-width:100%;overflow:hidden;display:flex;flex-direction:column;gap:10px}
+.ph-top{display:flex;justify-content:space-between;align-items:center}
+.ph-top b{font-family:var(--display);font-size:20px}
+.tile{background:#0C3D2D;border:1px solid var(--rim2);border-radius:18px;padding:12px 14px}
+.tile .k{font-size:12px;color:var(--lime);font-family:var(--display);font-weight:700}
+.tile .t{font-family:var(--display);font-weight:800;font-size:22px;line-height:1.15;margin-top:2px}
+.tile .s{font-size:12px;color:var(--mint)}
+.go{background:var(--lime);color:#04170F;border-radius:999px;text-align:center;font:800 15px var(--display);padding:10px}
+.ring{width:150px;height:150px;margin:6px auto 0;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--lime) 0 62%,var(--rim2) 62% 100%);position:relative;filter:drop-shadow(0 0 16px rgba(198,244,50,.3))}
+.ring::after{content:"";position:absolute;inset:12px;border-radius:50%;background:#03120c}
+.ring b{position:relative;z-index:1;font:800 34px var(--display);font-variant-numeric:tabular-nums}
+.card17{border-radius:18px;padding:14px;background:linear-gradient(160deg,#1f6e4f,#0c3d2d 60%);border:1px solid var(--lime);text-align:center}
+.card17 .ovr{font:800 40px/1 var(--display);color:var(--lime)}
+.card17 .pos{font:700 13px var(--display)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:10px;font-variant-numeric:tabular-nums}
+.stats span{font-size:12px;color:var(--mint)}.stats b{display:block;font:800 18px var(--display);color:var(--chalk)}
+.ans{display:flex;flex-direction:column;gap:6px}
+.ans div{border:1px solid var(--rim2);border-radius:12px;padding:8px 10px;font-size:13px;display:flex;gap:8px}
+.ans div i{font-style:normal;color:var(--lime);font-family:var(--display);font-weight:800}
+.ans div.right{border-color:var(--lime);background:rgba(198,244,50,.08)}
+.pitch{height:150px;border-radius:14px;background:repeating-linear-gradient(0deg,#0f4a35 0 22px,#0d4430 22px 44px);position:relative;overflow:hidden;border:1px solid var(--rim2)}
+.pitch i{position:absolute;width:16px;height:16px;border-radius:50%;font:700 9px/16px var(--display);text-align:center;font-style:normal}
+.pitch .me{background:var(--lime);color:#04170F}.pitch .tm{background:#d9f0a8;color:#04170F}.pitch .op{background:#ff8a7a;color:#04170F}
+.pitch svg{position:absolute;inset:0;width:100%;height:100%}
+.shots{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.shots figure{margin:0;display:flex;flex-direction:column;gap:16px;align-items:center;min-width:0}
+.shots figcaption{text-align:center;color:var(--mint);font-size:15px;max-width:22em}
+@media (max-width:900px){.shots{grid-template-columns:1fr}}
+
+/* parents */
+.safe{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.safe div{display:flex;gap:12px;align-items:flex-start;min-width:0;padding:16px 18px;background:var(--glass);border:1px solid var(--rim);border-radius:18px}
+.safe svg{flex:none;margin-top:5px}
+@media (max-width:900px){.safe{grid-template-columns:1fr}}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.split .photo{position:relative;border-radius:28px;overflow:hidden;aspect-ratio:4/3;max-width:100%;box-shadow:var(--glow)}
+.split .photo img{width:100%;height:100%;object-fit:cover;display:block}
+@media (max-width:900px){.split{grid-template-columns:1fr}}
+.prices{display:grid;grid-template-columns:repeat(2,minmax(0,340px));gap:18px}
+.price{border:1px solid var(--rim);border-radius:24px;padding:26px;display:flex;flex-direction:column;gap:6px;background:var(--glass)}
+.price.best{border-color:rgba(198,244,50,.6);box-shadow:var(--glow)}
+.price .amt{font:800 46px/1.1 var(--display);font-variant-numeric:tabular-nums}
+.price .amt small{font-size:17px;color:var(--mint);font-weight:500}
+@media (max-width:700px){.prices{grid-template-columns:1fr}}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;counter-reset:st}
+.step{padding:26px;display:flex;flex-direction:column;gap:8px;min-width:0;background:var(--glass);border:1px solid var(--rim);border-radius:24px}
+.step::before{counter-increment:st;content:counter(st);width:52px;height:52px;border-radius:16px;display:grid;place-items:center;border:1px solid var(--rim);background:rgba(198,244,50,.07);font:800 24px/1 var(--display);color:var(--lime);margin-bottom:6px}
+.step p{color:var(--mint)}
+@media (max-width:900px){.steps{grid-template-columns:1fr}}
+
+/* coach band */
+.coach{display:grid;grid-template-columns:1.1fr .9fr;gap:36px;align-items:center;border:1px solid var(--rim);border-radius:32px;padding:36px;background:linear-gradient(135deg,rgba(12,61,45,.75),rgba(4,23,15,.75));box-shadow:var(--glow)}
+.chip{display:inline-block;background:var(--lime);color:#04170F;font:700 13px var(--display);border-radius:999px;padding:4px 14px}
+.coach ul{margin:0;padding-inline-start:20px;color:var(--mint);display:flex;flex-direction:column;gap:6px}
+.mail{font:600 18px var(--text);user-select:all;color:var(--chalk);direction:ltr;display:inline-block}
+@media (max-width:900px){.coach{grid-template-columns:1fr;padding:22px}}
+
+/* faq */
+details{border:1px solid var(--rim);border-radius:18px;padding:16px 20px;background:var(--glass)}
+details + details{margin-top:10px}
+summary{cursor:pointer;font:700 18px var(--display);list-style:none;display:flex;justify-content:space-between;gap:16px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--lime);font-size:24px;line-height:1}
+details[open] summary::after{content:"–"}
+details p{color:var(--mint);margin-top:10px;max-width:46em}
+
+footer{border-top:1px solid var(--rim);padding-block:40px;color:var(--mint);font-size:15px}
+footer .fr{display:flex;flex-wrap:wrap;gap:18px 28px;align-items:center;justify-content:space-between}
+footer nav{display:flex;flex-wrap:wrap;gap:18px}
+footer a{color:var(--mint)}
+
+/* floating corner button (desktop) and full-width dock (phone) */
+.dock{position:fixed;z-index:8;inset:auto auto calc(22px + env(safe-area-inset-bottom,0px)) calc(22px + env(safe-area-inset-left,0px))}
+html[dir="ltr"] .dock{inset:auto calc(22px + env(safe-area-inset-right,0px)) calc(22px + env(safe-area-inset-bottom,0px)) auto}
+.dock .btn{box-shadow:0 0 0 8px rgba(4,23,15,.6),0 10px 34px rgba(198,244,50,.35)}
+@media (max-width:900px){.dock,html[dir="ltr"] .dock{inset:auto 0 0;padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:linear-gradient(0deg,var(--bg) 40%,rgba(4,23,15,0))}.dock .btn{width:100%;box-shadow:0 8px 30px rgba(198,244,50,.25)}footer{padding-bottom:100px}}
+
+/* entrance: content is visible at rest; it only rises a little */
+@media (prefers-reduced-motion:no-preference){
+ .hero > *{animation:up .8s cubic-bezier(.2,.7,.2,1) both}
+ .hero > *:nth-child(6){animation-delay:.08s}.hero > *:nth-child(7){animation-delay:.16s}.hero > *:nth-child(8){animation-delay:.24s}
+ .stage{animation:up 1s .2s cubic-bezier(.2,.7,.2,1) both}
+ @keyframes up{from{transform:translateY(16px)}to{transform:none}}
+}
 </style>
 </head>
 <body>
-<main>
-<h1>سياسة الخصوصية لتطبيق حرّيف</h1>
-<p class="date">آخر تحديث: 28 أكتوبر 2026 · <a href="#en">English</a> · <a href="terms.html">شروط الاستخدام</a></p>
 
-<p>حرّيف تطبيق تدريب كورة للّاعبين من 6 لـ 18 سنة. اللاعب اللي سنه أقل من 16 سنة بيستخدمه بحساب ولي أمره وبموافقته.</p>
 
-<h2>البيانات اللي التطبيق بيسجّلها</h2>
-<ul>
-<li>الاسم الأول وسنة الميلاد والنوع والمركز.</li>
-<li>صورة شخصية لو اللاعب أو ولي الأمر اختار يرفعها (بتظهر على بطاقة اللاعب وملفه).</li>
-<li>أيام التمرين والماتشات ومواعيد اليوم (المدرسة والنوم والأكل) اللي بتكتبها عشان التذكيرات.</li>
-<li>التمارين اللي اتعملت ومدتها وتقييم المجهود، وإجابات الدروس والمهام.</li>
-<li>نتايج اختبارات المهارة والسرعة والتقييمات المحسوبة منها.</li>
-<li>النبض وقت الحصة، لو اللاعب وصّل سوار نبض.</li>
-<li>لغة التطبيق اللي اخترتها (عربي أو إنجليزي)، ودي بتتحفظ على الموبايل بس.</li>
-<li>لو اتعمل حساب: الإيميل، وإيميل ولي الأمر لو اللاعب ربطه.</li>
-</ul>
+<header>
+ <div class="wrap">
+  <div class="navpill">
+   <a class="brand" href="#top" aria-label="حرّيف">
+    <svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#C6F432"/><circle cx="20" cy="20" r="5" fill="#04170F"/><path d="M40 48V30c0-6-4-10-10-10" fill="none" stroke="#04170F" stroke-width="6" stroke-linecap="round"/><path d="M24 14l6 6-6 6" fill="none" stroke="#04170F" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><path d="M50 12v40" stroke="#04170F" stroke-width="3" stroke-dasharray="2 5" stroke-linecap="round"/></svg>
+    <span class="ar">حرّيف</span><span class="en">Harreef</span>
+   </a>
+   <nav class="links" aria-label="الأقسام">
+    <a href="#gap"><span class="ar">الفكرة</span><span class="en">The idea</span></a>
+    <a href="#grow"><span class="ar">بنطوّر إيه</span><span class="en">What we develop</span></a>
+    <a href="#what"><span class="ar">جوّه التطبيق</span><span class="en">Inside the app</span></a>
+    <a href="#parents"><span class="ar">لأولياء الأمور</span><span class="en">Parents</span></a>
+    <a href="#coaches"><span class="ar">المدرب الخاص</span><span class="en">Private coach</span></a>
+   </nav>
+   <button class="lang" id="lang" type="button"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span class="ar">English</span><span class="en">عربي</span></button>
+   <a class="btn primary sm" href="#get"><span class="ar">حمّل التطبيق</span><span class="en">Get the app</span></a>
+  </div>
+ </div>
+</header>
 
-<h2>البيانات دي بتتحفظ فين</h2>
-<ul>
-<li>من غير حساب: كل حاجة بتتحفظ على الموبايل بس، وما بيخرجش منه أي بيانات.</li>
-<li>بحساب: نسخة من بيانات اللاعب (ومنها الصورة) بتتحفظ على خدمة Google Firebase (Firestore) في مراكز بيانات في أوروبا، عشان تقدر تفتحها من موبايل تاني، ويشوفها ولي الأمر.</li>
-<li>تسجيل الدخول بيتم عن طريق Firebase Authentication، بالإيميل وكلمة السر أو بحساب جوجل. إحنا ما بنشوفش كلمة السر.</li>
-<li>الاشتراك بيتم عن طريق Google Play. إحنا ما بنشوفش بيانات الكارت أو الدفع.</li>
-</ul>
+<main id="top">
+ <div class="wrap">
+  <div class="hero">
+   <i class="vf a" aria-hidden="true"></i><i class="vf b" aria-hidden="true"></i><i class="vf c" aria-hidden="true"></i><i class="vf d" aria-hidden="true"></i>
+   <span class="tag"><span class="ar">للاعيبة من 6 لـ 18 سنة</span><span class="en">For players aged 6 to 18</span></span>
+   <h1><span class="ar">الأكاديمية لوحدها مش كفاية.<br><span class="hl">عيش حياة اللعّيب.</span></span><span class="en">The academy alone is not enough.<br><span class="hl">Live a player's life.</span></span></h1>
+   <p class="lead"><span class="ar">لاعب النادي بيتمرن كل يوم، وساعات مرتين في اليوم. حرّيف بيدّي ابنك نفس اليوم ده: لمسات الصبح، وحصة العصر، ودرس بالليل، ومدرب خاص لو حبيت.</span><span class="en">A club player trains every day, sometimes twice. Harreef gives your child that same day: morning touches, an afternoon session, an evening lesson, and a private coach if you want one.</span></p>
+   <div class="cta">
+    <a class="btn primary" href="https://play.google.com/apps/testing/app.harreef.player" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3l11 9-11 9z" fill="currentColor"/></svg><span class="ar">انضم للتجربة على جوجل بلاي</span><span class="en">Join the test on Google Play</span></a>
+    <a class="btn line" href="#gap"><span class="ar">اعرف الفكرة</span><span class="en">See the idea</span></a>
+   </div>
+   <div class="bands" aria-label="الفئات العمرية">
+    <span class="band"><b dir="ltr">6–9</b> <span class="ar">سنين</span><span class="en">yrs</span></span>
+    <span class="band"><b dir="ltr">10–12</b> <span class="ar">سنة</span><span class="en">yrs</span></span>
+    <span class="band"><b dir="ltr">13–15</b> <span class="ar">سنة</span><span class="en">yrs</span></span>
+    <span class="band"><b dir="ltr">16–18</b> <span class="ar">سنة</span><span class="en">yrs</span></span>
+   </div>
+   <p class="note"><span class="ar">التطبيق في مرحلة التجربة على أندرويد دلوقتي، وقريب هيبقى متاح لكل الناس. نسخة الآيفون جاية بعدها.</span><span class="en">The app is in testing on Android now and opens to everyone soon. iPhone comes after.</span></p>
+  </div>
 
-<h2>مين يقدر يشوف البيانات</h2>
-<ul>
-<li>صاحب الحساب بس.</li>
-<li>ولي الأمر اللي إيميله متربط بحساب اللاعب (بعد ما يأكد إيميله) يقدر يشوف البطاقة والتمارين.</li>
-<li>ما فيش حد تاني، وما بنبيعش ولا بنشارك أي بيانات.</li>
-</ul>
+  <div class="stage">
+   <img src="img/hero-boy.jpg" alt="لاعب ناشئ بطقم حرّيف الأخضر بيجري بالكورة في الملعب">
+   <i class="veil" aria-hidden="true"></i>
+   <i class="lines" aria-hidden="true"></i>
+   <div class="floatcards">
+    <div class="glass fc"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span><div><b><span class="ar">كل يوم</span><span class="en">Every day</span></b><p><span class="ar">3 حصص قصيرة: الصبح والعصر وبالليل</span><span class="en">3 short sessions: morning, afternoon, evening</span></p></div></div>
+    <div class="glass fc"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18V8l8-4 8 4v10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 18v-5h6v5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span><div><b>48</b><p><span class="ar">مبدأ في السنة، فكرة جديدة كل أسبوع</span><span class="en">principles a year, a new idea every week</span></p></div></div>
+    <div class="glass fc"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h10l4 4v12H5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 13l2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><b>60</b><p><span class="ar">درس فيديو لمركزه بصوت الكابتن</span><span class="en">video lessons for his position</span></p></div></div>
+   </div>
+  </div>
+ </div>
 
-<h2>الكارت قدام اللاعيبة التانيين (قريبًا)</h2>
-<p>معرض كروت اللاعيبة وتشكيلة الشهر لسه مش شغالين. لما يشتغلوا:</p>
-<ul>
-<li>الكارت مقفول من الأول، ومش بيظهر لحد إلا لو ولي الأمر شغّله بنفسه من صفحة ولي الأمر، ويقدر يقفله تاني في أي وقت.</li>
-<li>اللي بيظهر الاسم الأول وأول حرف من اسم العيلة والمركز والأرقام بس. الصورة ما بتظهرش. مفيش سنة ميلاد ولا نادي ولا مواعيد ولا أي تفاصيل تانية.</li>
-<li>مفيش رسايل ولا تعليقات ولا أي تواصل بين اللاعيبة.</li>
-</ul>
+ <section class="s lines" id="gap">
+  <div class="wrap">
+   <div class="head center">
+    <p class="eyebrow"><span class="ar">الفجوة</span><span class="en">The gap</span></p>
+    <h2><span class="ar">ليه ولد النادي بيسبق ولد الأكاديمية؟</span><span class="en">Why does the club kid pull ahead?</span></h2>
+    <p class="muted"><span class="ar">خُد ولد من أكاديمية وروح بيه اختبارات أي نادي، هتلاقي ولد النادي فارق عنه كتير. مش موهبة: ده بيتمرن كل يوم، وساعات أكتر من مرة في اليوم. فبدنيًا أقوى، وعقليته في الملعب أحسن، وبيتطور أسرع. تمرين الوحدة في النادي بيساوي حصص كتير من بتاعة الأكاديمية.</span><span class="en">Take an academy kid to a club trial and the club kid is far ahead. It is not talent: he trains every day, sometimes more than once. So he is stronger, reads the game better and improves faster. One club session is worth many academy sessions.</span></p>
+   </div>
+   <div class="gap">
+    <div class="gcol"><span class="gk"><span class="ar">ولد الأكاديمية</span><span class="en">Academy kid</span></span><b class="gv"><span class="ar">2–3 حصص</span><span class="en">2–3 sessions</span></b><span class="gs"><span class="ar">في الأسبوع، وأغلب الوقت وقوف في الطابور</span><span class="en">a week, mostly waiting in line</span></span><div class="gbar"><i style="width:28%"></i></div></div>
+    <div class="gcol"><span class="gk"><span class="ar">ولد النادي</span><span class="en">Club kid</span></span><b class="gv"><span class="ar">كل يوم</span><span class="en">Every day</span></b><span class="gs"><span class="ar">وساعات مرتين، بخطة ومدرب ومتابعة</span><span class="en">sometimes twice, with a plan, a coach and follow-up</span></span><div class="gbar"><i style="width:100%"></i></div></div>
+    <div class="gcol hl2"><span class="gk"><span class="ar">ولد الأكاديمية + حرّيف</span><span class="en">Academy kid + Harreef</span></span><b class="gv"><span class="ar">كل يوم</span><span class="en">Every day</span></b><span class="gs"><span class="ar">3 حصص قصيرة في البيت والشارع، فوق تمرين الأكاديمية</span><span class="en">3 short sessions at home and in the street, on top of the academy</span></span><div class="gbar"><i style="width:92%"></i></div></div>
+   </div>
+   <p class="note" style="margin-top:14px"><span class="ar">الخطوط للتوضيح: بتقارن عدد أيام التمرين في الأسبوع، مش مستوى لاعب بعينه.</span><span class="en">Bars are illustrative: they compare training days a week, not any specific player.</span></p>
+  </div>
+ </section>
 
-<h2>المدرب الخاص (قريبًا)</h2>
-<p>خدمة حجز مدرب خاص لسه مش شغالة، ومفيش أي بيانات بتتبعت لمدربين دلوقتي. لما تشتغل، هنحدّث السياسة دي قبلها ونعرّفك جوه التطبيق. ساعتها الحجز هيبقى من ولي الأمر بس، والمدرب هيشوف الاسم الأول والسن والمركز وميعاد الحصة، ومش هيشوف رقم موبايل ولا إيميل، ومفيش رسايل بين المدرب والطفل.</p>
+ <section class="s" id="grow">
+  <div class="wrap">
+   <div class="head center">
+    <p class="eyebrow"><span class="ar">بنطوّر إيه</span><span class="en">What we develop</span></p>
+    <h2><span class="ar">مهارة، وجسم، ومخ كورة</span><span class="en">Skill, body and football brain</span></h2>
+   </div>
+   <div class="pillars">
+    <article class="pillar"><img src="img/skills.jpg" alt="رجلين لاعب صغير بيسوق الكورة بين زجاجات ميّه على سطح في القاهرة" loading="lazy"><div class="cap"><h3><span class="ar">تطوير المهارات</span><span class="en">Skills</span></h3><p><span class="ar">لمسات كل يوم، وسواقة، ومراوغة، وتسديد، بالرجلين الاتنين. زجاجات الميّه تكفي بدل الأقماع.</span><span class="en">Daily touches, dribbling, beating a man and shooting, with both feet. Water bottles work as cones.</span></p></div></article>
+    <article class="pillar"><img src="img/physical.jpg" alt="لاعب ناشئ بيعمل انطلاقة سرعة على النجيلة الصبح" loading="lazy"><div class="cap"><h3><span class="ar">التطوير البدني</span><span class="en">Physical</span></h3><p><span class="ar">سرعة ورشاقة وقوة بوزن الجسم، على قد سنّه. البرنامج بيخفف قبل الماتش وبيقف لو فيه وجع.</span><span class="en">Speed, agility and bodyweight strength for his age. It eases off before matches and pauses on pain.</span></p></div></article>
+    <article class="pillar"><img src="img/street.jpg" alt="ولد بيجري بالكورة في ملعب شعبي وقت المغرب" loading="lazy"><div class="cap"><h3><span class="ar">فهم اللعبة</span><span class="en">Game understanding</span></h3><p><span class="ar">يقف فين، ويبص إمتى، ويقرر إزاي. 60 درس على ملعب متحرك لمركزه، وسؤال سهل بعد كل درس.</span><span class="en">Where to stand, when to look, how to decide. 60 lessons on an animated pitch for his position.</span></p></div></article>
+   </div>
+  </div>
+ </section>
 
-<h2>اللي التطبيق ما بيعملوش</h2>
-<ul>
-<li>ما فيش إعلانات.</li>
-<li>ما فيش تتبّع ولا أدوات تحليل.</li>
-<li>ما بنجمعش الموقع الجغرافي.</li>
-</ul>
+ <section class="s" id="idea">
+  <div class="wrap">
+   <div class="head">
+    <p class="eyebrow"><span class="ar">الفكرة مبنية على إيه</span><span class="en">What it's built on</span></p>
+    <h2><span class="ar">يوم لاعب النادي، في البيت والشارع</span><span class="en">A club player's day, at home and in the street</span></h2>
+    <p class="muted"><span class="ar">اللاعب اللي بيلمس الكورة كل يوم بيسبق اللي بيتمرن مرتين في الأسبوع. حرّيف بيقسّم اليوم لتلات حصص قصيرة، وكل أسبوع بيركّز على فكرة واحدة من أفكار الكورة الحديثة.</span><span class="en">A player who touches the ball every day moves ahead of one who trains twice a week. Harreef splits the day into three short sessions, and each week focuses on one idea from modern football.</span></p>
+   </div>
+   <div class="day">
+    <div><span class="when"><span class="ar">الصبح · 10 دقايق</span><span class="en">Morning · 10 min</span></span><h3><span class="ar">لمسات الكورة</span><span class="en">Ball touches</span></h3><p><span class="ar">لمسات بباطن الرجل وبرّاها، وحركة جديدة كل أسبوع. العدد بيزيد بالتدريج مع السن.</span><span class="en">Inside and outside touches, with a new move every week. The count grows step by step with age.</span></p></div>
+    <div><span class="when"><span class="ar">العصر · 25–40 دقيقة</span><span class="en">Afternoon · 25–40 min</span></span><h3><span class="ar">حصة اليوم</span><span class="en">The session</span></h3><p><span class="ar">نوعها بيتغيّر مع اليوم: سرعة، مراوغة، قوة، تسديد، استلام، أو يوم خفيف. وقبل الماتش وبعده بتبقى أخف لوحدها.</span><span class="en">Its type follows the weekday: speed, dribbling, strength, shooting, receiving or a light day. Around matches it gets lighter on its own.</span></p></div>
+    <div><span class="when"><span class="ar">بالليل · 10 دقايق</span><span class="en">Evening · 10 min</span></span><h3><span class="ar">درس ومهمة</span><span class="en">Lesson and mission</span></h3><p><span class="ar">درس فيديو على الملعب بصوت الكابتن وسؤال سهل، ومهمة صغيرة يجرّبها في التمرين الجاي.</span><span class="en">A pitch video lesson with the coach's voice and one easy question, plus a small mission to try next session.</span></p></div>
+   </div>
 
-<h2>الأذونات</h2>
-<ul>
-<li>الإشعارات والمنبّهات الدقيقة: لتذكير اللاعب بمواعيد التمرين والماتش في وقتها.</li>
-<li>البلوتوث: لقراءة النبض من السوار وقت الحصة بس.</li>
-<li>الصور: لما تختار صورة للكارت بنفسك. الصورة بتتصغّر قبل ما تتحفظ.</li>
-</ul>
+   <div class="grid3" style="margin-top:40px">
+    <div class="feat"><span class="num">48</span><h3><span class="ar">مبدأ في السنة</span><span class="en">principles a year</span></h3><p><span class="ar">4 فترات، كل فترة 13 أسبوع: 12 مبدأ وأسبوع اختبارات ومراجعة. من أفكار الروندو واللعب بالمراكز في برشلونة، وطريقة أياكس، ومنهج الاتحاد الإنجليزي للناشئين.</span><span class="en">4 blocks of 13 weeks: 12 principles and a test-and-review week. Drawn from Barcelona's rondos and positional play, the Ajax way and the English FA youth curriculum.</span></p></div>
+    <div class="feat"><span class="num">60</span><h3><span class="ar">درس فيديو للمراكز</span><span class="en">position video lessons</span></h3><p><span class="ar">12 درس لكل مركز: جناح، مهاجم، وسط، مدافع، حارس. الدرس اللي بعده بيفتح بكرة لما يجاوب صح.</span><span class="en">12 for each position: winger, striker, midfield, defender, keeper. The next one opens the day after a right answer.</span></p></div>
+    <div class="feat"><span class="num">11+</span><h3><span class="ar">البدني بأمان</span><span class="en">safe physical work</span></h3><p><span class="ar">تمارين بوزن الجسم على أساس برنامج 11+ Kids وتوصيات NSCA للناشئين: الطريقة الصح الأول، وبعدين العدد. ولو سجّل وجع، البدني بيقف.</span><span class="en">Bodyweight work based on 11+ Kids and NSCA youth guidelines: technique first, then reps. If pain is logged, physical work pauses.</span></p></div>
+   </div>
 
-<h2>مسح الحساب والبيانات</h2>
-<ul>
-<li>من جوه التطبيق: المزيد ← ملفي وحسابي ← امسح الحساب. ده بيمسح الحساب وكل بيانات اللاعيبة اللي عليه من السيرفر فورًا.</li>
-<li>من غير التطبيق: ابعت طلب من صفحة مسح الحساب وهنمسحه خلال 30 يوم.</li>
-<li>البيانات اللي على الموبايل بتتمسح من: خطتي ← ولي الأمر ← ابدأ من الأول، أو بمسح التطبيق.</li>
-</ul>
+   <div class="tbl" style="margin-top:40px">
+    <table>
+     <thead><tr><th><span class="ar">الفئة</span><span class="en">Group</span></th><th><span class="ar">السن</span><span class="en">Age</span></th><th><span class="ar">لمسات في اليوم</span><span class="en">Touches a day</span></th><th><span class="ar">التركيز</span><span class="en">Focus</span></th></tr></thead>
+     <tbody>
+      <tr><td>1</td><td><bdi dir="ltr">6–9</bdi></td><td>300</td><td><span class="ar">حب الكورة، والتوازن، واللعب الحر</span><span class="en">Loving the ball, balance and free play</span></td></tr>
+      <tr><td>2</td><td><bdi dir="ltr">10–12</bdi></td><td>500</td><td><span class="ar">المهارة بالرجلين، والاستلام، والبصّة قبل الكورة</span><span class="en">Two-footed skill, receiving, scanning</span></td></tr>
+      <tr><td>3</td><td><bdi dir="ltr">13–15</bdi></td><td>800</td><td><span class="ar">التحرك بدون كورة، والقرار، وقوة بوزن الجسم</span><span class="en">Off-ball movement, decisions, bodyweight strength</span></td></tr>
+      <tr><td>4</td><td><bdi dir="ltr">16–18</bdi></td><td>1000</td><td><span class="ar">اللعب تحت الضغط، والسرعة، وحمل تدريب محسوب</span><span class="en">Playing under pressure, speed, measured load</span></td></tr>
+     </tbody>
+    </table>
+   </div>
+  </div>
+ </section>
 
-<h2>الأطفال</h2>
-<p>التطبيق موجّه للّاعبين الناشئين ومنهم أطفال تحت 13 سنة. اللاعب اللي تحت 16 سنة الحساب بيتعمل باسم ولي أمره وبموافقته الصريحة جوه التطبيق، وولي الأمر يقدر يمسح البيانات في أي وقت. بنجمع أقل بيانات ممكنة ومحتاجينها للتمرين بس.</p>
+ <section class="s lines" id="what">
+  <div class="wrap">
+   <div class="head center">
+    <p class="eyebrow"><span class="ar">بنقدّم إيه</span><span class="en">What you get</span></p>
+    <h2><span class="ar">مدرب في جيبه، طول السنة</span><span class="en">A coach in his pocket, all year</span></h2>
+   </div>
+   <div class="shots">
+    <figure>
+     <div class="phone" role="img" aria-label="شاشة التمرين والتايمر">
+      <div class="ph-top"><b style="font-size:16px"><span class="ar">3 من 6 · أهداف على الحيطة</span><span class="en">3 of 6 · Targets on the wall</span></b></div>
+      <div class="ring"><b>07:00</b></div>
+      <div class="tile"><div class="k"><span class="ar">الخطوة 1 من 2 · دلوقتي</span><span class="en">Step 1 of 2 · now</span></div><div class="s" style="color:var(--chalk);font-size:14px"><span class="ar">من 5 لـ8 متر، سدد أرضي في الزاوية.</span><span class="en">From 5 to 8 m, shoot low into the corner.</span></div></div>
+      <div class="tile"><div class="k"><span class="ar">ركّز</span><span class="en">Focus</span></div><div class="s"><span class="ar">باطن الرجل، ورجل الارتكاز جنب الكورة.</span><span class="en">Inside of the foot, standing foot beside the ball.</span></div></div>
+      <div class="go" style="margin-top:auto"><span class="ar">ابدأ التايمر</span><span class="en">Start timer</span></div>
+     </div>
+     <figcaption><span class="ar">كل تمرين بخطواته وتايمر وصوت صفارة. مش محتاج ملعب: حيطة وكورة وكام زجاجة.</span><span class="en">Every drill with steps, a timer and a whistle. No pitch needed: a wall, a ball and a few bottles.</span></figcaption>
+    </figure>
+    <figure>
+     <div class="phone" role="img" aria-label="درس فيديو على الملعب">
+      <div class="ph-top"><b style="font-size:16px"><span class="ar">درس فيديو · وسط</span><span class="en">Video lesson · Midfield</span></b></div>
+      <div class="pitch" aria-hidden="true">
+       <svg viewBox="0 0 280 150"><path d="M60 110 Q120 60 180 70" fill="none" stroke="#C6F432" stroke-width="2" stroke-dasharray="6 6"/><circle cx="140" cy="75" r="30" fill="none" stroke="rgba(255,255,255,.25)"/></svg>
+       <i class="me" style="left:52%;top:42%">8</i><i class="tm" style="left:20%;top:70%">4</i><i class="tm" style="left:78%;top:30%">7</i><i class="op" style="left:45%;top:25%">9</i><i class="op" style="left:62%;top:58%">6</i>
+      </div>
+      <div class="s" style="font-size:13px"><span class="ar">يا كابتن، قبل ما الكورة توصلك: بصة على كتفك اليمين، وبصة على الشمال.</span><span class="en">Hey champ, before the ball arrives: a look over your right shoulder, and one to the left.</span></div>
+      <div class="ans">
+       <div class="right"><i>أ</i><span class="ar">أستلم وألف من أول لمسة</span><span class="en">Receive and turn first time</span></div>
+       <div><i>ب</i><span class="ar">أرجّعها لزميلي</span><span class="en">Pass it back</span></div>
+       <div><i>ج</i><span class="ar">أقف بيها</span><span class="en">Stop with it</span></div>
+      </div>
+     </div>
+     <figcaption><span class="ar">60 درس على ملعب متحرك بصوت الكابتن، وبعد كل درس سؤال واحد سهل.</span><span class="en">60 lessons on an animated pitch with the coach's voice, and one easy question after each.</span></figcaption>
+    </figure>
+    <figure>
+     <div class="phone" role="img" aria-label="كارت اللاعب">
+      <div class="ph-top"><b style="font-size:16px"><span class="ar">كارتي</span><span class="en">My card</span></b></div>
+      <div class="card17"><div class="ovr">74</div><div class="pos"><span class="ar">وسط · يوسف م.</span><span class="en">Midfield · Youssef M.</span></div>
+       <div class="stats"><div><span><span class="ar">سرعة</span><span class="en">PAC</span></span><b>71</b></div><div><span><span class="ar">تسديد</span><span class="en">SHO</span></span><b>68</b></div><div><span><span class="ar">تمرير</span><span class="en">PAS</span></span><b>79</b></div><div><span><span class="ar">مراوغة</span><span class="en">DRI</span></span><b>77</b></div><div><span><span class="ar">دفاع</span><span class="en">DEF</span></span><b>66</b></div><div><span><span class="ar">بدني</span><span class="en">PHY</span></span><b>70</b></div></div>
+      </div>
+      <div class="tile"><div class="k"><span class="ar">اختبار الشهر</span><span class="en">This month's test</span></div><div class="s"><span class="ar">زجزاج بين 6 علامات: 11.8 ثانية. أحسن من آخر مرة بـ 0.6.</span><span class="en">Zigzag through 6 markers: 11.8 s. 0.6 faster than last time.</span></div></div>
+      <div class="tile"><div class="k"><span class="ar">مهمتك قبل الاختبار الجاي</span><span class="en">Before the next test</span></div><div class="s"><span class="ar">أضعف رقم: دفاع. نص أسابيع الشهر عليه.</span><span class="en">Weakest number: DEF. Half the month works on it.</span></div></div>
+     </div>
+     <figcaption><span class="ar">كارت بأرقام حقيقية من 8 اختبارات بيت كل 4 أسابيع، والشهر بيتبني على أضعف رقم.</span><span class="en">A card with real numbers from 8 home tests every 4 weeks, and the month built around the weakest one.</span></figcaption>
+    </figure>
+   </div>
 
-<h2>التغييرات</h2>
-<p>لو غيّرنا السياسة دي هنحدّث التاريخ اللي فوق ونعرّف المستخدمين جوه التطبيق.</p>
+   <div class="grid3" style="margin-top:44px">
+    <div class="feat"><h3><span class="ar">بيتظبط على يومه</span><span class="en">Fits his day</span></h3><p><span class="ar">مواعيد المدرسة والنادي والماتش والنوم، والتذكير بيوصل في ميعاده. ولو عنده تمرين نادي، حرّيف بيخفف.</span><span class="en">School, club, match and bed times, with reminders on time. With club training that day, Harreef goes lighter.</span></p></div>
+    <div class="feat"><h3><span class="ar">ظرف كل شهر</span><span class="en">A monthly envelope</span></h3><p><span class="ar">كل شهر بيتفتح بظرف من الكابتن فيه هدف الشهر، وجوّه الشهر كل أسبوع فكرة جديدة بتظهر يوم الأحد.</span><span class="en">Each month opens with a letter from the coach and its goal, and each week a new idea appears on Sunday.</span></p></div>
+    <div class="feat"><h3><span class="ar">عربي وإنجليزي</span><span class="en">Arabic and English</span></h3><p><span class="ar">التطبيق بالعربي المصري، وتقدر تقلبه إنجليزي من «المزيد». ويشتغل من غير نت بعد أول فتحة.</span><span class="en">The app speaks Egyptian Arabic and switches to English from «More». It works offline after the first open.</span></p></div>
+   </div>
+  </div>
+ </section>
 
-<h2>التواصل</h2>
-<p>للأسئلة أو طلبات المسح: <a href="mailto:ragabgamal600@gmail.com">ragabgamal600@gmail.com</a>، أو من صفحة مسح الحساب.</p>
+ <section class="s" id="parents">
+  <div class="wrap">
+   <div class="split" style="margin-bottom:36px">
+   <div class="photo"><img src="img/parent.jpg" alt="أب وابنه على الكنبة بيبصوا على الموبايل والابن ماسك كورة" loading="lazy"></div>
+   <div class="head" style="margin-bottom:0">
+    <p class="eyebrow"><span class="ar">لأولياء الأمور</span><span class="en">For parents</span></p>
+    <h2><span class="ar">ابنك بيتمرن، وانت مطمّن</span><span class="en">He trains, you stay in control</span></h2>
+    <p class="muted"><span class="ar">صفحة ولي الأمر بتوريك كل يوم اتمرن ولا لأ، والدفتر بيوريك اللي كتبه بعد كل مهمة.</span><span class="en">The parent page shows whether he trained each day, and the notebook shows what he wrote after each mission.</span></p>
+   </div>
+   </div>
+   <div class="safe">
+    <div><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l4 4 10-10" fill="none" stroke="#C6F432" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><p><span class="ar">اللاعب تحت 16 سنة، الحساب بيبقى باسم ولي الأمر وبموافقته.</span><span class="en">Under 16, the account is in the parent's name, with their consent.</span></p></div>
+    <div><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l4 4 10-10" fill="none" stroke="#C6F432" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><p><span class="ar">أي شراء بيحتاج الرقم السري بتاع ولي الأمر.</span><span class="en">Any purchase needs the parent's PIN.</span></p></div>
+    <div><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l4 4 10-10" fill="none" stroke="#C6F432" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><p><span class="ar">مفيش إعلانات، ولا تتبّع، ولا موقع جغرافي.</span><span class="en">No ads, no tracking, no location.</span></p></div>
+    <div><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l4 4 10-10" fill="none" stroke="#C6F432" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><p><span class="ar">مفيش رسايل ولا شات بين اللاعيبة، والكارت مقفول إلا لو انت فتحته.</span><span class="en">No messages or chat between players, and the card stays hidden unless you turn it on.</span></p></div>
+    <div><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l4 4 10-10" fill="none" stroke="#C6F432" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><p><span class="ar">البدني بيقف لوحده لو ابنك سجّل وجع، أو لو انت سجّلت علامات تعب.</span><span class="en">Physical work pauses on its own if he logs pain or you log signs of fatigue.</span></p></div>
+    <div><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l4 4 10-10" fill="none" stroke="#C6F432" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><p><span class="ar">تقدر تمسح الحساب وكل بياناته في أي وقت من جوّه التطبيق.</span><span class="en">You can delete the account and all its data from inside the app at any time.</span></p></div>
+   </div>
 
-<section class="en" id="en" lang="en" dir="ltr">
-<h1>Harreef Privacy Policy</h1>
-<p class="date">Last updated: 28 October 2026 · <a href="terms.html">Terms of use</a></p>
-<p>Harreef is a football training app for players aged 6 to 18. Players under 16 use it through their parent's account and with their parent's consent.</p>
-<h2>Data the app records</h2>
-<ul><li>First name, birth year, sex and position.</li><li>A profile photo, if the player or parent chooses to upload one (shown on the player card and profile).</li><li>Training and match days, and daily times (school, sleep, meals) you enter for reminders.</li><li>Drills done, their length and effort rating, and answers to lessons and missions.</li><li>Skill and speed test results and the ratings calculated from them.</li><li>Heart rate during a session, if the player connects a heart-rate band.</li><li>The app language you chose (Arabic or English), stored on the phone only.</li><li>With an account: the email address, and the parent's email if linked.</li></ul>
-<h2>Where it is stored</h2>
-<ul><li>Without an account: everything stays on the phone and no data leaves it.</li><li>With an account: a copy of the player's data (including the photo) is stored on Google Firebase (Firestore) in data centres in Europe, so it can be opened on another phone and seen by the parent.</li><li>Sign-in uses Firebase Authentication, with email and password or a Google account. We never see the password.</li><li>Subscriptions go through Google Play. We never see card or payment details.</li></ul>
-<h2>Who can see it</h2>
-<ul><li>Only the account owner.</li><li>A parent whose email is linked to the player's account (after confirming it) can see the card and training.</li><li>No one else. We do not sell or share any data.</li></ul>
-<h2>The card for other players (coming soon)</h2>
-<p>The players' card gallery and team of the month are not live yet. When they launch:</p>
-<ul><li>The card is hidden by default and only shown if the parent turns it on from the parent page; they can turn it off at any time.</li><li>Only the first name, last initial, position and ratings show. The photo is never shown. No birth year, club, schedule or other details.</li><li>There are no messages, comments or any contact between players.</li></ul>
-<h2>Private coach (coming soon)</h2>
-<p>Private-coach booking is not live yet, and no data is sent to coaches. Before it launches we will update this policy and tell you in the app. Booking will be by the parent only; the coach will see the first name, age, position and session time, never a phone number or email, and there will be no messages between coach and child.</p>
-<h2>What the app does not do</h2>
-<ul><li>No ads.</li><li>No tracking or analytics tools.</li><li>No location collection.</li></ul>
-<h2>Permissions</h2>
-<ul><li>Notifications and exact alarms: to remind the player of training and match times on time.</li><li>Bluetooth: only to read heart rate from the band during a session.</li><li>Photos: only when you pick a card photo yourself. The photo is resized before it is saved.</li></ul>
-<h2>Deleting the account and data</h2>
-<ul><li>In the app: More → My profile and account → Delete the account. This deletes the account and all its players' data from the server immediately.</li><li>Outside the app: send a request from the account deletion page and we will delete it within 30 days.</li><li>Data on the phone is erased from: Plan → Parent → Start over, or by uninstalling the app.</li></ul>
-<h2>Children</h2>
-<p>The app is for young players, including children under 13. For players under 16 the account is created in the parent's name with their explicit consent in the app, and the parent can delete the data at any time. We collect the least data possible, only what training needs.</p>
-<h2>Changes</h2>
-<p>If we change this policy we will update the date above and tell users in the app.</p>
-<h2>Contact</h2>
-<p>Questions or deletion requests: <a href="mailto:ragabgamal600@gmail.com">ragabgamal600@gmail.com</a>, or the account deletion page.</p>
-</section>
+   <div style="margin-top:44px">
+    <p class="eyebrow"><span class="ar">الاشتراك</span><span class="en">Subscription</span></p>
+    <div class="prices" style="margin-top:14px">
+     <div class="price"><h3><span class="ar">شهري</span><span class="en">Monthly</span></h3><div class="amt">79 <small><span class="ar">جنيه في الشهر</span><span class="en">EGP a month</span></small></div><p class="muted"><span class="ar">أول شهر ببلاش، وبعده شهرين بخصم.</span><span class="en">First month free, then two discounted months.</span></p></div>
+     <div class="price best"><h3><span class="ar">سنوي</span><span class="en">Yearly</span></h3><div class="amt">599 <small><span class="ar">جنيه في السنة</span><span class="en">EGP a year</span></small></div><p class="muted"><span class="ar">حوالي 50 جنيه في الشهر، وأول شهر ببلاش.</span><span class="en">About 50 EGP a month, first month free.</span></p></div>
+    </div>
+    <p class="note"><span class="ar">الاشتراك بيتجدد لوحده من جوجل بلاي، وتقدر تلغيه في أي وقت. لو لغيت قبل ما الشهر المجاني يخلص، مش هتدفع حاجة.</span><span class="en">It renews through Google Play and you can cancel any time. Cancel during the free month and you pay nothing.</span></p>
+   </div>
+  </div>
+ </section>
+
+ <section class="s" id="coaches">
+  <div class="wrap">
+   <div class="coach">
+    <div style="display:flex;flex-direction:column;gap:12px">
+     <span><span class="chip"><span class="ar">جوّه التطبيق</span><span class="en">In the app</span></span></span>
+     <h2><span class="ar">مدرب خاص، بأمان</span><span class="en">A private coach, safely</span></h2>
+     <p class="muted"><span class="ar">زي لاعب النادي اللي ليه مدرب بيتابعه: ولي الأمر يحجز حصة مع مدرب معاه رخصة ومستنداته اتراجعت، في ملعب مسجّل.</span><span class="en">Like a club player with a coach who follows him: the parent books a session with a licensed coach whose papers were checked, at a registered pitch.</span></p>
+     <ul>
+      <li><span class="ar">حساب المدرب ببلاش، من غير اشتراك.</span><span class="en">The coach account is free, with no subscription.</span></li>
+      <li><span class="ar">الحجز والدفع من حساب ولي الأمر بس.</span><span class="en">Booking and payment from the parent's account only.</span></li>
+      <li><span class="ar">مفيش تواصل بين المدرب والطفل غير عن طريق ولي الأمر.</span><span class="en">No contact between coach and child except through the parent.</span></li>
+      <li><span class="ar">المدرب يبعت تقرير بعد كل حصة، وواجب يظهر في «يومك».</span><span class="en">The coach sends a report after each session, and homework that shows in «Your day».</span></li>
+     </ul>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+     <div class="photo" style="border-radius:18px;overflow:hidden;aspect-ratio:16/10;max-width:100%"><img src="img/coach.jpg" alt="مدرب راكع جنب ولد بيشرحله حركة عند قمع في ملعب وقت الغروب" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block"></div>
+     <h3><span class="ar">انت مدرب؟</span><span class="en">Are you a coach?</span></h3>
+     <p class="muted"><span class="ar">سجّل من التطبيق: اختار «أنا مدرب» أول ما تفتحه، وارفع رخصتك ومستنداتك. لأي سؤال:</span><span class="en">Sign up in the app: choose «I'm a coach» when you open it and upload your licence and papers. Questions:</span></p>
+     <span class="mail">ragabgamal600@gmail.com</span>
+    </div>
+   </div>
+  </div>
+ </section>
+
+ <section class="s" id="get">
+  <div class="wrap">
+   <div class="head">
+    <p class="eyebrow"><span class="ar">حمّل التطبيق</span><span class="en">Get the app</span></p>
+    <h2><span class="ar">تلات خطوات وتبدأ</span><span class="en">Three steps to start</span></h2>
+   </div>
+   <div class="steps">
+    <div class="step"><h3><span class="ar">افتح الرابط من موبايل أندرويد</span><span class="en">Open the link on an Android phone</span></h3><p><span class="ar">دوس «انضم للتجربة» بنفس حساب جوجل اللي على الموبايل، وبعدها «حمّل من جوجل بلاي».</span><span class="en">Tap «Join the test» with the phone's Google account, then «Download from Google Play».</span></p></div>
+    <div class="step"><h3><span class="ar">ثبّت حرّيف وافتحه</span><span class="en">Install and open Harreef</span></h3><p><span class="ar">اكتب اسم اللاعب وسنة ميلاده ومركزه، ولو بيتمرن في نادي. البرنامج بيتبني على ده.</span><span class="en">Enter the player's name, birth year, position and club. The plan is built from that.</span></p></div>
+    <div class="step"><h3><span class="ar">ابدأ أول يوم</span><span class="en">Start day one</span></h3><p><span class="ar">اعمل اختبارات الكارت، وافتح ظرف الشهر الأول، وابدأ لمسات الصبح.</span><span class="en">Do the card tests, open the first month's envelope and start the morning touches.</span></p></div>
+   </div>
+   <div class="cta"><a class="btn primary" href="https://play.google.com/apps/testing/app.harreef.player" rel="noopener"><span class="ar">انضم للتجربة على جوجل بلاي</span><span class="en">Join the test on Google Play</span></a></div>
+
+   <div style="margin-top:56px">
+    <h2 style="font-size:28px;margin-bottom:8px"><span class="ar">أسئلة بتتسأل كتير</span><span class="en">Common questions</span></h2>
+    <details><summary><span class="ar">محتاج ملعب أو أدوات غالية؟</span><span class="en">Does he need a pitch or expensive kit?</span></summary><p><span class="ar">لأ. أغلب التمارين محتاجة كورة وحيطة ومساحة 5 متر، وكام زجاجة فاضية بدل الأقماع.</span><span class="en">No. Most drills need a ball, a wall, 5 metres of space and a few empty bottles instead of cones.</span></p></details>
+    <details><summary><span class="ar">بيشتغل من غير نت؟</span><span class="en">Does it work offline?</span></summary><p><span class="ar">أيوه. محتاج نت أول مرة بس، وبعدها التمارين والدروس والصوت كلهم شغالين من غير نت.</span><span class="en">Yes. It needs the internet once; after that drills, lessons and audio all work offline.</span></p></details>
+    <details><summary><span class="ar">ابني بيتمرن في نادي، ينفع معاه؟</span><span class="en">He trains at a club. Does it still fit?</span></summary><p><span class="ar">أيوه. بتحدد أيام النادي والماتش، وحرّيف بيبني حواليهم ويسيبله راحة، وبيحسب حمل الأسبوع كله.</span><span class="en">Yes. You set club and match days, and Harreef builds around them, leaves rest days and counts the whole week's load.</span></p></details>
+    <details><summary><span class="ar">فيه نسخة للآيفون؟</span><span class="en">Is there an iPhone version?</span></summary><p><span class="ar">لسه. هتيجي بعد ما نسخة أندرويد تفتح لكل الناس.</span><span class="en">Not yet. It comes after the Android version opens to everyone.</span></p></details>
+    <details><summary><span class="ar">مين ورا المحتوى؟</span><span class="en">Who is behind the content?</span></summary><p><span class="ar">المحتوى مبني على مناهج منشورة لتدريب الناشئين، وجاري مراجعته مع مدرب معاه رخصة. التمارين عامة ومش بديل عن الدكتور لو فيه إصابة.</span><span class="en">It is built on published youth training curricula and is being reviewed with a licensed coach. Drills are general and are not a substitute for a doctor if there is an injury.</span></p></details>
+   </div>
+  </div>
+ </section>
 </main>
+
+<div class="dock"><a class="btn primary" href="https://play.google.com/apps/testing/app.harreef.player" rel="noopener"><span class="ar">انضم للتجربة على جوجل بلاي</span><span class="en">Join the test on Google Play</span></a></div>
+
+<footer>
+ <div class="wrap fr">
+  <span><span class="ar">© 2026 حرّيف</span><span class="en">© 2026 Harreef</span></span>
+  <nav aria-label="روابط">
+   <a href="privacy.html"><span class="ar">سياسة الخصوصية</span><span class="en">Privacy</span></a>
+   <a href="terms.html"><span class="ar">شروط الاستخدام</span><span class="en">Terms</span></a>
+   <a href="delete-account.html"><span class="ar">مسح الحساب</span><span class="en">Delete account</span></a>
+  </nav>
+  <span class="mail" style="font-size:15px">ragabgamal600@gmail.com</span>
+ </div>
+</footer>
+
+<script>
+(function(){
+ var html=document.documentElement,b=document.getElementById('lang');
+ function set(l){html.lang=l;html.dir=l==='en'?'ltr':'rtl';try{localStorage.setItem('harreef_site_lang',l)}catch(e){}}
+ var saved=null;try{saved=localStorage.getItem('harreef_site_lang')}catch(e){}
+ set(saved==='en'?'en':'ar');
+ b.addEventListener('click',function(){set(html.lang==='en'?'ar':'en')});
+})();
+</script>
+
 </body>
 </html>
