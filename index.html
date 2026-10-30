@@ -238,6 +238,13 @@ html[dir="ltr"] .dock{inset:auto calc(22px + env(safe-area-inset-right,0px)) cal
  .stage{animation:up 1s .2s cubic-bezier(.2,.7,.2,1) both}
  @keyframes up{from{transform:translateY(16px)}to{transform:none}}
 }
+/* cookie consent: the Meta pixel loads only after "موافق" */
+.consent{position:fixed;z-index:20;inset:auto 0 0;padding:14px max(16px,env(safe-area-inset-right,0px)) calc(14px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:rgba(4,23,15,.96);border-top:1px solid var(--rim2);backdrop-filter:blur(8px)}
+.consent .in{max-width:1180px;margin:0 auto;display:flex;gap:12px 18px;align-items:center;flex-wrap:wrap}
+.consent p{flex:1 1 320px;font-size:15px;line-height:1.6;color:var(--mint)}
+.consent .row{display:flex;gap:10px;flex-wrap:wrap}
+.consent .btn{padding:10px 22px;font-size:16px}
+.consent .btn.line{background:transparent;color:var(--chalk);border:1px solid var(--rim2)}
 </style>
 </head>
 <body>
@@ -515,5 +522,30 @@ html[dir="ltr"] .dock{inset:auto calc(22px + env(safe-area-inset-right,0px)) cal
 })();
 </script>
 
+
+<div class="consent" id="consent" hidden role="region" aria-label="الكوكيز">
+ <div class="in">
+  <p><span class="ar">بنستخدم كوكيز من ميتا (فيسبوك) عشان نعرف إعلاناتنا جابت كام زيارة. ده على الموقع بس، والتطبيق نفسه مفيهوش أي تتبع. <a href="privacy.html#site">اعرف أكتر</a></span><span class="en">We use Meta (Facebook) cookies to measure visits from our ads. This is on the website only; the app itself has no tracking. <a href="privacy.html#site">Learn more</a></span></p>
+  <div class="row"><button class="btn primary" type="button" data-consent="yes"><span class="ar">موافق</span><span class="en">Accept</span></button><button class="btn line" type="button" data-consent="no"><span class="ar">لأ، شكرًا</span><span class="en">No thanks</span></button></div>
+ </div>
+</div>
+<script>
+/* Meta pixel for ad measurement, on the website only. Nothing loads until the visitor accepts. */
+(function(){
+ var PIXEL='1004590242673976',K='harreef_consent',box=document.getElementById('consent');
+ function get(){try{return localStorage.getItem(K)}catch(e){return null}}
+ function put(v){try{localStorage.setItem(K,v)}catch(e){}}
+ function load(){
+  if(window.fbq||!/^\d{10,20}$/.test(PIXEL))return;
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init',PIXEL);fbq('track','PageView');
+ }
+ var c=get();
+ if(c==='yes')load();else if(c!=='no')box.hidden=false;
+ box.addEventListener('click',function(e){var b=e.target.closest('[data-consent]');if(!b)return;put(b.dataset.consent);box.hidden=true;if(b.dataset.consent==='yes')load();});
+ /* a click on any Google Play button counts as a lead */
+ document.addEventListener('click',function(e){var a=e.target.closest('a[href*="play.google.com"]');if(a&&window.fbq)fbq('track','Lead',{content_name:'google_play'});});
+})();
+</script>
 </body>
 </html>
